@@ -226,7 +226,7 @@
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Sexe</label>
                                     <div class="mt-2 flex items-center space-x-4">
-                                        <label class="flex items-center"><input type="radio" name="enfant_sexe" value="M" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300"> <span class="ml-2">M</span></label>
+                                        <label class="flex items-center"><input type="radio" name="enfant_sexe" value="M" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300" required> <span class="ml-2">M</span></label>
                                         <label class="flex items-center"><input type="radio" name="enfant_sexe" value="F" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300"> <span class="ml-2">F</span></label>
                                     </div>
                                 </div>
@@ -263,7 +263,7 @@
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Sexe</label>
                                     <div class="mt-2 flex items-center space-x-4">
-                                        <label class="flex items-center"><input type="radio" name="tuteur_sexe" value="M" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300"> <span class="ml-2">M</span></label>
+                                        <label class="flex items-center"><input type="radio" name="tuteur_sexe" value="M" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300" required> <span class="ml-2">M</span></label>
                                         <label class="flex items-center"><input type="radio" name="tuteur_sexe" value="F" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300"> <span class="ml-2">F</span></label>
                                     </div>
                                 </div>
@@ -291,7 +291,7 @@
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Motif du voyage</label>
                                     <div class="space-y-2">
-                                        <label class="flex items-center"><input type="radio" name="voyage_motif" value="Etudes" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300"><span class="ml-2">Études</span></label>
+                                        <label class="flex items-center"><input type="radio" name="voyage_motif" value="Etudes" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300" required><span class="ml-2">Études</span></label>
                                         <label class="flex items-center"><input type="radio" name="voyage_motif" value="Soins medicaux" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300"><span class="ml-2">Soins médicaux</span></label>
                                         <label class="flex items-center"><input type="radio" name="voyage_motif" value="Vacances" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300"><span class="ml-2">Vacances / visite familiale</span></label>
                                         <div class="flex items-center">
@@ -319,8 +319,8 @@
                             <div class="mt-4 space-y-4">
                                 <p class="text-gray-700 italic leading-loose">Je soussigné(e) <input type="text" name="declaration_nom_tuteur" placeholder="Nom du responsable" class="inline-block w-64 mx-1 px-2 py-1 border-b-2 border-gray-300 focus:outline-none focus:border-fonafen-green align-baseline">, responsable légal de l’enfant susmentionné, sollicite par la présente l’autorisation de sortie du territoire national for l’enfant à destination de <input type="text" name="declaration_destination" placeholder="Destination" class="inline-block w-48 mx-1 px-2 py-1 border-b-2 border-gray-300 focus:outline-none focus:border-fonafen-green align-baseline">, sous ma responsabilité et conformément aux lois de la RDC.</p>
                                 <div class="flex items-center space-x-4 pt-4">
-                                    <span>Fait à</span> <input type="text" name="declaration_lieu" placeholder="Lieu" class="w-48 px-2 py-1 border border-gray-300 rounded-md focus:ring-fonafen-green focus:border-fonafen-green">,
-                                    <span>le</span> <input type="date" name="declaration_date" class="w-48 px-2 py-1 border border-gray-300 rounded-md focus:ring-fonafen-green focus:border-fonafen-green">
+                                    <span>Fait à</span> <input type="text" name="declaration_lieu" placeholder="Lieu" required class="w-48 px-2 py-1 border border-gray-300 rounded-md focus:ring-fonafen-green focus:border-fonafen-green">,
+                                    <span>le</span> <input type="date" name="declaration_date" required class="w-48 px-2 py-1 border border-gray-300 rounded-md focus:ring-fonafen-green focus:border-fonafen-green">
                                 </div>
                             </div>
                         </fieldset>
@@ -775,6 +775,146 @@
                 voyage_debut: '2026-02-10', voyage_fin: '2026-02-25',
                 declaration_lieu: 'Bandundu', declaration_date: '2026-01-05',
                 fichiers: { "Inscription compétition": "compet_canada.pdf" }
+            },
+            {
+                id: 11, nom: "Diop", postnom: "", prenom: "Fatou",
+                photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=FD",
+                sexe: "Féminin", date_naissance: '2008-05-12', lieu_naissance: 'Dakar', nationalite: 'Sénégalaise', passeport: 'SN1234567',
+                province: "Kinshasa", district: 'N/A', territoire: 'Ngaliema', secteur: 'N/A', avenue: 'de la Liberté', maison: 'n° 45',
+                tuteur: 'Moussa Diop', tuteur_nom: "Diop", tuteur_prenom: "Moussa",
+                tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=MD', tuteur_sexe: 'M', tuteur_lieu_naissance: 'Dakar',
+                tuteur_telephone: '+243 81 111 2222', tuteur_lien: 'Père', tuteur_adresse_complete: '45, Avenue de la Liberté, Ngaliema, Kinshasa',
+                tuteur_piece_identite: 'CE111222333',
+                voyage_adresse: 'Université de Montréal', voyage_destination: 'Montréal, Canada', voyage_motif: 'Etudes',
+                voyage_debut: '2025-09-01', voyage_fin: '2026-05-30',
+                declaration_lieu: 'Kinshasa', declaration_date: '2025-08-10',
+                fichiers: { "Lettre d'admission": "admission_udem.pdf" }
+            },
+            {
+                id: 12, nom: "Benali", postnom: "", prenom: "Ahmed",
+                photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=AB",
+                sexe: "Masculin", date_naissance: '2014-11-20', lieu_naissance: 'Alger', nationalite: 'Algérienne', passeport: 'DZ8765432',
+                province: "Haut-Katanga", district: 'N/A', territoire: 'Lubumbashi', secteur: 'Kamalondo', avenue: 'Kasa-Vubu', maison: 'n° 110',
+                tuteur: 'Fatima Benali', tuteur_nom: "Benali", tuteur_prenom: "Fatima",
+                tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=FB', tuteur_sexe: 'F', tuteur_lieu_naissance: 'Alger',
+                tuteur_telephone: '+243 99 222 3333', tuteur_lien: 'Mère', tuteur_adresse_complete: '110, Avenue Kasa-Vubu, Kamalondo, Lubumbashi',
+                tuteur_piece_identite: 'CE444555666',
+                voyage_adresse: 'Hôpitaux universitaires de Genève', voyage_destination: 'Genève, Suisse', voyage_motif: 'Soins medicaux',
+                voyage_debut: '2025-10-05', voyage_fin: '2025-11-05',
+                declaration_lieu: 'Lubumbashi', declaration_date: '2025-09-15',
+                fichiers: { "Dossier médical": "dossier_ahmed.pdf" }
+            },
+            {
+                id: 13, nom: "Silva", postnom: "", prenom: "Maria",
+                photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=MS",
+                sexe: "Féminin", date_naissance: '2013-02-18', lieu_naissance: 'Rio de Janeiro', nationalite: 'Brésilienne', passeport: 'BR5554443',
+                province: "Kinshasa", district: 'N/A', territoire: 'Kintambo', secteur: 'N/A', avenue: 'du Commerce', maison: 'n° 200',
+                tuteur: 'Joao Silva', tuteur_nom: "Silva", tuteur_prenom: "Joao",
+                tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=JS', tuteur_sexe: 'M', tuteur_lieu_naissance: 'Sao Paulo',
+                tuteur_telephone: '+243 82 333 4444', tuteur_lien: 'Père', tuteur_adresse_complete: '200, Avenue du Commerce, Kintambo, Kinshasa',
+                tuteur_piece_identite: 'CE777888999',
+                voyage_adresse: '123 Main Street, Miami, FL, USA', voyage_destination: 'Miami, USA', voyage_motif: 'Vacances / visite familiale',
+                voyage_debut: '2025-12-20', voyage_fin: '2026-01-20',
+                declaration_lieu: 'Kinshasa', declaration_date: '2025-11-25',
+                fichiers: {}
+            },
+            {
+                id: 14, nom: "Tanaka", postnom: "", prenom: "Kenji",
+                photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=KT",
+                sexe: "Masculin", date_naissance: '2009-08-30', lieu_naissance: 'Tokyo', nationalite: 'Japonaise', passeport: 'JP1122334',
+                province: "Kinshasa", district: 'N/A', territoire: 'Gombe', secteur: 'N/A', avenue: 'de la Justice', maison: 'n° 77',
+                tuteur: 'Yuki Tanaka', tuteur_nom: "Tanaka", tuteur_prenom: "Yuki",
+                tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=YT', tuteur_sexe: 'F', tuteur_lieu_naissance: 'Kyoto',
+                tuteur_telephone: '+243 97 444 5555', tuteur_lien: 'Mère', tuteur_adresse_complete: '77, Avenue de la Justice, Gombe, Kinshasa',
+                tuteur_piece_identite: 'CE121212121',
+                voyage_adresse: 'Philharmonie de Berlin', voyage_destination: 'Berlin, Allemagne', voyage_motif: 'Autre',
+                voyage_debut: '2026-03-10', voyage_fin: '2026-03-20',
+                declaration_lieu: 'Kinshasa', declaration_date: '2026-02-15',
+                fichiers: { "Invitation concours": "concours_violon.pdf" }
+            },
+            {
+                id: 15, nom: "Kone", postnom: "", prenom: "Amina",
+                photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=AK",
+                sexe: "Féminin", date_naissance: '2016-04-05', lieu_naissance: 'Bamako', nationalite: 'Malienne', passeport: 'ML9876543',
+                province: "Kinshasa", district: 'N/A', territoire: 'Masina', secteur: 'N/A', avenue: 'de l\'Université', maison: 'n° 312',
+                tuteur: 'Ousmane Kone', tuteur_nom: "Kone", tuteur_prenom: "Ousmane",
+                tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=OK', tuteur_sexe: 'M', tuteur_lieu_naissance: 'Bamako',
+                tuteur_telephone: '+243 81 555 6666', tuteur_lien: 'Oncle', tuteur_adresse_complete: '312, Avenue de l\'Université, Masina, Kinshasa',
+                tuteur_piece_identite: 'CE323232323',
+                voyage_adresse: '22 Rue de la Paix, Paris, France', voyage_destination: 'Paris, France', voyage_motif: 'Vacances',
+                voyage_debut: '2025-07-15', voyage_fin: '2025-08-15',
+                declaration_lieu: 'Kinshasa', declaration_date: '2025-06-20',
+                fichiers: {}
+            },
+             {
+                id: 16, nom: "Okoro", postnom: "", prenom: "David",
+                photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=DO",
+                sexe: "Masculin", date_naissance: '2007-12-01', lieu_naissance: 'Lagos', nationalite: 'Nigériane', passeport: 'NG2468135',
+                province: "Lualaba", district: 'N/A', territoire: 'Kolwezi', secteur: 'Dilala', avenue: 'Lumumba', maison: 'n° 500',
+                tuteur: 'John Okoro', tuteur_nom: "Okoro", tuteur_prenom: "John",
+                tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=JO', tuteur_sexe: 'M', tuteur_lieu_naissance: 'Lagos',
+                tuteur_telephone: '+243 99 666 7777', tuteur_lien: 'Père', tuteur_adresse_complete: '500, Avenue Lumumba, Dilala, Kolwezi',
+                tuteur_piece_identite: 'CE757575757',
+                voyage_adresse: 'Manchester United Academy', voyage_destination: 'Manchester, UK', voyage_motif: 'Etudes',
+                voyage_debut: '2025-09-01', voyage_fin: '2026-07-01',
+                declaration_lieu: 'Kolwezi', declaration_date: '2025-08-01',
+                fichiers: { "Lettre d'invitation": "manutd_academy.pdf" }
+            },
+            {
+                id: 17, nom: "Rossi", postnom: "", prenom: "Sofia",
+                photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=SR",
+                sexe: "Féminin", date_naissance: '2010-06-15', lieu_naissance: 'Rome', nationalite: 'Italienne', passeport: 'IT1357924',
+                province: "Nord-Kivu", district: 'N/A', territoire: 'Goma', secteur: 'Karisimbi', avenue: 'des Grands Lacs', maison: 'n° 8',
+                tuteur: 'Marco Rossi', tuteur_nom: "Rossi", tuteur_prenom: "Marco",
+                tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=MR', tuteur_sexe: 'M', tuteur_lieu_naissance: 'Milan',
+                tuteur_telephone: '+243 82 777 8888', tuteur_lien: 'Père', tuteur_adresse_complete: '8, Avenue des Grands Lacs, Karisimbi, Goma',
+                tuteur_piece_identite: 'CE868686868',
+                voyage_adresse: 'Calle de Alcalá, Madrid', voyage_destination: 'Madrid, Espagne', voyage_motif: 'Autre',
+                voyage_debut: '2026-04-01', voyage_fin: '2026-04-30',
+                declaration_lieu: 'Goma', declaration_date: '2026-03-01',
+                fichiers: { "Programme d'échange": "echange_culturel_es.pdf" }
+            },
+            {
+                id: 18, nom: "Murphy", postnom: "", prenom: "Liam",
+                photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=LM",
+                sexe: "Masculin", date_naissance: '2019-03-17', lieu_naissance: 'Dublin', nationalite: 'Irlandaise', passeport: 'IE9753186',
+                province: "Tanganyika", district: 'N/A', territoire: 'Kalemie', secteur: 'Lukuga', avenue: 'du Port', maison: 'n° 42',
+                tuteur: 'Siobhan Murphy', tuteur_nom: "Murphy", tuteur_prenom: "Siobhan",
+                tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=SM', tuteur_sexe: 'F', tuteur_lieu_naissance: 'Cork',
+                tuteur_telephone: '+243 97 888 9999', tuteur_lien: 'Mère', tuteur_adresse_complete: '42, Avenue du Port, Lukuga, Kalemie',
+                tuteur_piece_identite: 'CE949494949',
+                voyage_adresse: '100 Harbour Street, Sydney', voyage_destination: 'Sydney, Australie', voyage_motif: 'Vacances / visite familiale',
+                voyage_debut: '2025-11-20', voyage_fin: '2026-01-10',
+                declaration_lieu: 'Kalemie', declaration_date: '2025-10-20',
+                fichiers: {}
+            },
+            {
+                id: 19, nom: "Dubois", postnom: "", prenom: "Chloé",
+                photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=CD",
+                sexe: "Féminin", date_naissance: '2006-10-25', lieu_naissance: 'Bruxelles', nationalite: 'Belge', passeport: 'BE7539512',
+                province: "Sud-Kivu", district: 'N/A', territoire: 'Bukavu', secteur: 'Ibanda', avenue: 'Patrice Lumumba', maison: 'n° 150',
+                tuteur: 'Jean-Pierre Dubois', tuteur_nom: "Dubois", tuteur_prenom: "Jean-Pierre",
+                tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=JPD', tuteur_sexe: 'M', tuteur_lieu_naissance: 'Liège',
+                tuteur_telephone: '+243 81 999 0000', tuteur_lien: 'Père', tuteur_adresse_complete: '150, Avenue Patrice Lumumba, Ibanda, Bukavu',
+                tuteur_piece_identite: 'CE258258258',
+                voyage_adresse: 'Kruger National Park, Afrique du Sud', voyage_destination: 'Mpumalanga, Afrique du Sud', voyage_motif: 'Autre',
+                voyage_debut: '2025-06-15', voyage_fin: '2025-07-05',
+                declaration_lieu: 'Bukavu', declaration_date: '2025-05-15',
+                fichiers: { "Programme de volontariat": "volontariat_kruger.pdf" }
+            },
+            {
+                id: 20, nom: "Al-Farsi", postnom: "", prenom: "Omar",
+                photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=OA",
+                sexe: "Masculin", date_naissance: '2015-01-30', lieu_naissance: 'Mascate', nationalite: 'Omanaise', passeport: 'OM3692581',
+                province: "Kinshasa", district: 'N/A', territoire: 'Limete', secteur: 'N/A', avenue: 'des Poids Lourds', maison: 'n° 1000',
+                tuteur: 'Ali Al-Farsi', tuteur_nom: "Al-Farsi", tuteur_prenom: "Ali",
+                tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=AA', tuteur_sexe: 'M', tuteur_lieu_naissance: 'Salalah',
+                tuteur_telephone: '+243 99 123 9876', tuteur_lien: 'Père', tuteur_adresse_complete: '1000, Avenue des Poids Lourds, Limete, Kinshasa',
+                tuteur_piece_identite: 'CE147258369',
+                voyage_adresse: 'Avenue de l\'Equateur, Gombe', voyage_destination: 'Kinshasa, RDC', voyage_motif: 'Vacances / visite familiale',
+                voyage_debut: '2025-08-01', voyage_fin: '2025-08-30',
+                declaration_lieu: 'Kinshasa', declaration_date: '2025-07-01',
+                fichiers: {}
             }
         ];
 
@@ -826,7 +966,9 @@
                 ui.statistiques.classList.remove('hidden');
                 updateStats();
             } else {
-                sectionToShow.classList.remove('hidden');
+                 if (sectionToShow) { // Vérifier si la section existe
+                    sectionToShow.classList.remove('hidden');
+                }
             }
 
             if(sectionToShow === ui.consultation) filtrerEtAfficher();
@@ -887,17 +1029,76 @@
         ui.btnDetailsRetour.addEventListener('click', () => showSection(ui.consultation));
         ui.btnImprimer.addEventListener('click', () => window.print());
 
-        // --- LOGIQUE DU FORMULAIRE ---
+        // --- LOGIQUE DU FORMULAIRE (CORRIGÉE) ---
         if (ui.exitForm) {
             ui.exitForm.addEventListener('submit', (event) => {
                 event.preventDefault();
-                showModal('success', 'Demande Soumise!', 'Votre demande a été soumise avec succès.');
+
+                // 1. Récupérer les données du formulaire
+                const formData = new FormData(ui.exitForm);
+                const formValues = Object.fromEntries(formData.entries());
+
+                // 2. Créer un nouvel objet d'enregistrement
+                const newEnfant = {
+                    id: Date.now(),
+                    nom: formValues.enfant_nom,
+                    postnom: "", // Pas de champ pour postnom dans le formulaire
+                    prenom: formValues.enfant_prenom,
+                    photo: ui.photoEnfantPreview.src, // Utiliser l'aperçu de l'image
+                    sexe: formValues.enfant_sexe === 'M' ? 'Masculin' : 'Féminin',
+                    date_naissance: formValues.enfant_date_naissance,
+                    lieu_naissance: formValues.enfant_lieu_naissance,
+                    nationalite: formValues.enfant_nationalite,
+                    passeport: formValues.enfant_passeport,
+                    province: formValues.province,
+                    district: formValues.district,
+                    territoire: formValues.territoire,
+                    secteur: formValues.secteur,
+                    avenue: formValues.enfant_avenue,
+                    maison: formValues.enfant_maison,
+                    tuteur: `${formValues.tuteur_prenom} ${formValues.tuteur_nom}`,
+                    tuteur_nom: formValues.tuteur_nom,
+                    tuteur_prenom: formValues.tuteur_prenom,
+                    tuteur_photo: ui.photoTuteurPreview.src, // Utiliser l'aperçu de l'image
+                    tuteur_sexe: formValues.tuteur_sexe === 'M' ? 'Masculin' : 'Féminin',
+                    tuteur_lieu_naissance: formValues.tuteur_lieu_naissance,
+                    tuteur_telephone: `(+243) ${formValues.tuteur_telephone}`,
+                    tuteur_lien: formValues.tuteur_lien,
+                    tuteur_adresse_complete: formValues.tuteur_adresse,
+                    tuteur_piece_identite: formValues.tuteur_piece_identite,
+                    voyage_adresse: formValues.voyage_adresse,
+                    voyage_destination: formValues.voyage_destination,
+                    voyage_motif: formValues.voyage_motif === 'Autre' ? formValues.voyage_motif_autre : formValues.voyage_motif,
+                    voyage_debut: formValues.voyage_debut,
+                    voyage_fin: formValues.voyage_fin,
+                    declaration_lieu: formValues.declaration_lieu,
+                    declaration_date: formValues.declaration_date,
+                    fichiers: {} // La gestion des fichiers est plus complexe et n'est pas implémentée ici
+                };
+
+                // 3. Ajouter le nouvel enregistrement au tableau principal
+                enregistrements.push(newEnfant);
+
+                // 4. Sauvegarder la liste mise à jour dans le localStorage
+                saveToLocalStorage();
+
+                // 5. Mettre à jour les statistiques
+                updateStats();
+
+                // 6. Afficher une notification de succès
+                showModal('success', 'Demande Enregistrée!', 'Votre demande a été enregistrée avec succès. Vous allez être redirigé.');
                 ui.exitForm.reset();
                 ui.photoEnfantPreview.src = 'https://placehold.co/128x128/e2e8f0/cbd5e0?text=Photo';
                 ui.photoTuteurPreview.src = 'https://placehold.co/128x128/e2e8f0/cbd5e0?text=Photo';
-                setTimeout(() => showSection(ui.accueil), 2000);
+
+                // 7. Rediriger vers la page de consultation après un court délai
+                setTimeout(() => {
+                    closeModal();
+                    showSection(ui.consultation);
+                }, 2500);
             });
         }
+
 
         const handlePhotoPreview = (input, preview) => {
             const file = input.files[0];
@@ -915,8 +1116,10 @@
         const heroSlides = [ "https://images.unsplash.com/photo-1519642918688-7e43b19245d8?q=80&w=2070&auto=format&fit=crop", "https://images.unsplash.com/photo-1509099836639-18ba1795216d?q=80&w=1931&auto=format&fit=crop", "https://images.unsplash.com/photo-1542810614-9FCf95e9792e?q=80&w=2070&auto=format&fit=crop" ];
         let currentSlide = 0;
         function changeHeroBackground() {
-            ui.accueil.style.backgroundImage = `linear-gradient(rgba(0, 130, 64, 0.8), rgba(0, 0, 0, 0.7)), url('${heroSlides[currentSlide]}')`;
-            currentSlide = (currentSlide + 1) % heroSlides.length;
+            if (ui.accueil) {
+                 ui.accueil.style.backgroundImage = `linear-gradient(rgba(0, 130, 64, 0.8), rgba(0, 0, 0, 0.7)), url('${heroSlides[currentSlide]}')`;
+                currentSlide = (currentSlide + 1) % heroSlides.length;
+            }
         }
         changeHeroBackground();
         setInterval(changeHeroBackground, 5000);
@@ -1036,6 +1239,10 @@
                 const matchSexe = !sexeFiltre || enfant.sexe === sexeFiltre;
                 return matchNom && matchProvince && matchSexe;
             });
+
+            // Trier les résultats pour afficher les plus récents en premier
+            resultatsFiltres.sort((a, b) => b.id - a.id);
+
             afficherEnregistrements(resultatsFiltres);
         }
 
@@ -1081,10 +1288,12 @@
 
         // --- GESTION DU HEADER AU SCROLL ---
         window.onscroll = () => {
-            if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-                ui.header.classList.add('shadow-lg');
-            } else {
-                ui.header.classList.remove('shadow-lg');
+            if (ui.header) {
+                if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                    ui.header.classList.add('shadow-lg');
+                } else {
+                    ui.header.classList.remove('shadow-lg');
+                }
             }
         };
 
