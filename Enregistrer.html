@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FONAFEN - Enregistrer une fiche</title>
+    <link rel="icon" href="logofonafen.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        :root {
+            --fonafen-green: #008240;
+            --fonafen-green-dark: #006b35;
+        }
+        .bg-fonafen-green { background-color: var(--fonafen-green); }
+        .text-fonafen-green { color: var(--fonafen-green); }
+        .border-fonafen-green { border-color: var(--fonafen-green); }
+        .ring-fonafen-green:focus { ring-color: var(--fonafen-green); }
+        .hover\:bg-fonafen-green-dark:hover { background-color: var(--fonafen-green-dark); }
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #fff; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease-out; }
+        .spinner { width: 56px; height: 56px; border-radius: 50%; border: 6px solid #f3f3f3; border-top: 6px solid var(--fonafen-green); animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .custom-file-upload { border: 2px dashed #ccc; transition: all 0.3s ease; }
+        .custom-file-upload:hover { border-color: var(--fonafen-green); background-color: #f9f9f9; }
+        #modal-backdrop { transition: opacity 0.3s ease-in-out; }
+        #modal-content { transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="bg-white text-gray-700 antialiased">
+
+    <!-- Preloader -->
+    <div id="preloader"><div class="spinner"></div></div>
+
+    <!-- Header -->
+    <header id="main-header" class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="index.html" class="flex-shrink-0 cursor-pointer flex items-center gap-3">
+                    <img class="h-16 w-auto" src="logofonafen.png" alt="Logo FONAFEN">
+                    <span class="text-xl font-bold text-gray-800 hidden sm:block">FONAFEN</span>
+                </a>
+                <nav class="flex items-center gap-4">
+                    <a href="index.html" class="text-gray-600 hover:text-fonafen-green font-medium">Accueil</a>
+                    <a href="consulter.html" class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-300">
+                        Consulter
+                    </a>
+                    <a href="enregistrer.html" class="bg-fonafen-green text-white font-bold py-2 px-4 rounded-lg">
+                        Enregistrer
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Registration Form Section -->
+        <section id="formulaire-enregistrement" class="py-12 md:py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-800">ENREGISTREMENT D'AUTORISATION DE SORTIE D'UN ENFANT MINEUR</h2>
+                        <p class="mt-2 text-gray-600">Veuillez remplir les informations ci-dessous avec précision.</p>
+                    </div>
+                    <form id="child-exit-form" class="bg-gray-50 p-8 rounded-xl shadow-lg border border-gray-200 space-y-8">
+
+                        <!-- I. Identification de l'Enfant -->
+                        <fieldset class="border-t-4 border-fonafen-green pt-4">
+                            <legend class="text-xl font-bold text-gray-800 px-4">I. Identification de l'Enfant</legend>
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mt-4">
+                                <div class="md:col-span-2 text-center">
+                                     <label class="block text-sm font-medium text-gray-700 mb-2">Photo de l'enfant (2MB max)</label>
+                                     <img id="photo-enfant-preview" src="https://placehold.co/128x128/e2e8f0/cbd5e0?text=Photo" alt="Aperçu" class="h-32 w-32 rounded-full object-cover bg-gray-200 mx-auto mb-4 border-4 border-white shadow-md">
+                                     <label for="photo-enfant" class="custom-file-upload py-2 px-4 inline-block text-fonafen-green font-semibold rounded-lg hover:text-white hover:bg-fonafen-green cursor-pointer">
+                                         <i class="fas fa-upload mr-2"></i><span>Télécharger une photo</span>
+                                         <input id="photo-enfant" name="photo-enfant" type="file" class="sr-only" accept="image/*">
+                                     </label>
+                                 </div>
+                                <div><label for="enfant_nom" class="block text-sm font-medium text-gray-700">Nom(s) et Post-nom(s)</label><input type="text" id="enfant_nom" name="enfant_nom" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                                <div><label for="enfant_prenom" class="block text-sm font-medium text-gray-700">Prénom(s)</label><input type="text" id="enfant_prenom" name="enfant_prenom" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Sexe</label>
+                                    <div class="mt-2 flex items-center space-x-4">
+                                        <label class="flex items-center"><input type="radio" name="enfant_sexe" value="M" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300" required> <span class="ml-2">M</span></label>
+                                        <label class="flex items-center"><input type="radio" name="enfant_sexe" value="F" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300"> <span class="ml-2">F</span></label>
+                                    </div>
+                                </div>
+                                <div><label for="enfant_date_naissance" class="block text-sm font-medium text-gray-700">Date de naissance</label><input type="date" id="enfant_date_naissance" name="enfant_date_naissance" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                                <div><label for="enfant_lieu_naissance" class="block text-sm font-medium text-gray-700">Lieu de naissance</label><input type="text" id="enfant_lieu_naissance" name="enfant_lieu_naissance" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                                <div><label for="enfant_nationalite" class="block text-sm font-medium text-gray-700">Nationalité</label><input type="text" id="enfant_nationalite" name="enfant_nationalite" value="Congolaise" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green bg-gray-100"></div>
+                                <div class="md:col-span-2"><label for="enfant_passeport" class="block text-sm font-medium text-gray-700">N° Passeport (si disponible)</label><input type="text" id="enfant_passeport" name="enfant_passeport" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+
+                                <div class="md:col-span-2"><p class="block text-sm font-bold text-gray-700 mt-4">Adresse physique</p></div>
+                                <div><label for="province" class="block text-sm font-medium text-gray-700">Province</label><select id="province" name="province" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green bg-white"><option value="">Sélectionner une province...</option></select></div>
+                                <div><label for="district" class="block text-sm font-medium text-gray-700">District</label><select id="district" name="district" required disabled class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green bg-gray-200 transition duration-300"><option value="">Sélectionner un district...</option></select></div>
+                                <div><label for="territoire" class="block text-sm font-medium text-gray-700" id="territoire-label">Territoire</label><select id="territoire" name="territoire" required disabled class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green bg-gray-200 transition duration-300"><option value="">Sélectionner un territoire...</option></select></div>
+                                <div><label for="secteur" class="block text-sm font-medium text-gray-700" id="secteur-label">Secteur / Chefferie</label><select id="secteur" name="secteur" required disabled class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green bg-gray-200 transition duration-300"><option value="">Sélectionner un secteur...</option></select></div>
+
+                                <div class="md:col-span-2"><label for="enfant_avenue" class="block text-sm font-medium text-gray-700">Avenue</label><input type="text" id="enfant_avenue" name="enfant_avenue" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                                <div class="md:col-span-2"><label for="enfant_maison" class="block text-sm font-medium text-gray-700">Référence / N° maison</label><input type="text" id="enfant_maison" name="enfant_maison" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                            </div>
+                        </fieldset>
+
+                        <!-- II. Identité du Responsable / Tuteur légal -->
+                        <fieldset class="border-t-2 border-gray-300 pt-6">
+                            <legend class="text-xl font-bold text-gray-800 px-4">II. Identité du Responsable / Tuteur légal</legend>
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mt-4">
+                                 <div class="md:col-span-2 text-center">
+                                     <label class="block text-sm font-medium text-gray-700 mb-2">Photo du Tuteur (2MB max)</label>
+                                     <img id="photo-tuteur-preview" src="https://placehold.co/128x128/e2e8f0/cbd5e0?text=Photo" alt="Aperçu" class="h-32 w-32 rounded-full object-cover bg-gray-200 mx-auto mb-4 border-4 border-white shadow-md">
+                                     <label for="photo-tuteur" class="custom-file-upload py-2 px-4 inline-block text-fonafen-green font-semibold rounded-lg hover:text-white hover:bg-fonafen-green cursor-pointer">
+                                         <i class="fas fa-upload mr-2"></i><span>Télécharger une photo</span>
+                                         <input id="photo-tuteur" name="photo-tuteur" type="file" class="sr-only" accept="image/*">
+                                     </label>
+                                 </div>
+                                <div><label for="tuteur_nom" class="block text-sm font-medium text-gray-700">Nom(s) et Post-nom(s)</label><input type="text" id="tuteur_nom" name="tuteur_nom" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                                <div><label for="tuteur_prenom" class="block text-sm font-medium text-gray-700">Prénom(s)</label><input type="text" id="tuteur_prenom" name="tuteur_prenom" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Sexe</label>
+                                    <div class="mt-2 flex items-center space-x-4">
+                                        <label class="flex items-center"><input type="radio" name="tuteur_sexe" value="M" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300" required> <span class="ml-2">M</span></label>
+                                        <label class="flex items-center"><input type="radio" name="tuteur_sexe" value="F" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300"> <span class="ml-2">F</span></label>
+                                    </div>
+                                </div>
+                                <div><label for="tuteur_lieu_naissance" class="block text-sm font-medium text-gray-700">Lieu de naissance</label><input type="text" id="tuteur_lieu_naissance" name="tuteur_lieu_naissance" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                                <div><label for="tuteur_telephone" class="block text-sm font-medium text-gray-700">Téléphone</label><div class="relative mt-1"><div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"><span class="text-gray-500 sm:text-sm">(+243)</span></div><input type="tel" id="tuteur_telephone" name="tuteur_telephone" required class="block w-full pl-16 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div></div>
+                                <div><label for="tuteur_lien" class="block text-sm font-medium text-gray-700">Lien de parenté / Titre de tutelle</label><input type="text" id="tuteur_lien" name="tuteur_lien" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                                <div class="md:col-span-2"><label for="tuteur_adresse" class="block text-sm font-medium text-gray-700">Adresse complète</label><input type="text" id="tuteur_adresse" name="tuteur_adresse" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+
+                                <!-- MODIFICATION: Ajout du type de pièce et modification de la grille -->
+                                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                                    <div>
+                                        <label for="tuteur_type_piece" class="block text-sm font-medium text-gray-700">Type de pièce d'identité</label>
+                                        <select id="tuteur_type_piece" name="tuteur_type_piece" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green bg-white">
+                                            <option value="">Sélectionner un type...</option>
+                                            <option value="Passeport">Passeport</option>
+                                            <option value="Carte d'électeur">Carte d'électeur</option>
+                                            <option value="Carte d'identité">Carte d'identité</option>
+                                            <option value="Récépissé de perte">Récépissé de perte</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="tuteur_piece_identite" class="block text-sm font-medium text-gray-700">Numéro de la pièce</label>
+                                        <input type="text" id="tuteur_piece_identite" name="tuteur_piece_identite" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green">
+                                    </div>
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <label for="file_piece_identite_tuteur" class="block text-sm font-medium text-gray-700">Joindre le document <span class="text-red-500 font-bold">(Obligatoire)</span></label>
+                                    <input type="file" id="file_piece_identite_tuteur" name="file_piece_identite_tuteur" required class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-fonafen-green/10 file:text-fonafen-green hover:file:bg-fonafen-green/20 cursor-pointer">
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- III. Informations sur le Voyage -->
+                        <fieldset class="border-t-2 border-gray-300 pt-6">
+                            <legend class="text-xl font-bold text-gray-800 px-4">III. Informations sur le Voyage</legend>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mt-4">
+                                <div class="md:col-span-2"><label for="voyage_adresse" class="block text-sm font-medium text-gray-700">Adresse où se rend l'enfant</label><input type="text" id="voyage_adresse" name="voyage_adresse" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                                <div class="md:col-span-2"><label for="voyage_destination" class="block text-sm font-medium text-gray-700">Pays et Ville de destination</label><input type="text" id="voyage_destination" name="voyage_destination" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Motif du voyage</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center"><input type="radio" name="voyage_motif" value="Etudes" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300" required><span class="ml-2">Études</span></label>
+                                        <label class="flex items-center"><input type="radio" name="voyage_motif" value="Soins medicaux" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300"><span class="ml-2">Soins médicaux</span></label>
+                                        <label class="flex items-center"><input type="radio" name="voyage_motif" value="Vacances" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300"><span class="ml-2">Vacances / visite familiale</span></label>
+                                        <div class="flex items-center">
+                                            <input type="radio" name="voyage_motif" value="Autre" class="focus:ring-fonafen-green h-4 w-4 text-fonafen-green border-gray-300">
+                                            <span class="ml-2 mr-2">Autre (préciser) :</span>
+                                            <input type="text" name="voyage_motif_autre" class="flex-1 block w-full px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green sm:text-sm">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700">Durée prévue du séjour</label>
+                                    <div class="flex items-center mt-1 space-x-4">
+                                        <label for="voyage_debut" class="flex-shrink-0">Du</label>
+                                        <input type="date" id="voyage_debut" name="voyage_debut" required class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green">
+                                        <label for="voyage_fin" class="flex-shrink-0">au</label>
+                                        <input type="date" id="voyage_fin" name="voyage_fin" required class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- IV. Déclaration du Responsable / Tuteur -->
+                        <fieldset class="border-t-2 border-gray-300 pt-6">
+                            <legend class="text-xl font-bold text-gray-800 px-4">IV. Déclaration du Responsable / Tuteur</legend>
+                            <div class="mt-4 space-y-4">
+                                <p class="text-gray-700 italic leading-loose">Je soussigné(e) <input type="text" name="declaration_nom_tuteur" placeholder="Nom du responsable" class="inline-block w-64 mx-1 px-2 py-1 border-b-2 border-gray-300 focus:outline-none focus:border-fonafen-green align-baseline">, responsable légal de l'enfant susmentionné, sollicite par la présente l'autorisation de sortie du territoire national for l'enfant à destination de <input type="text" name="declaration_destination" placeholder="Destination" class="inline-block w-48 mx-1 px-2 py-1 border-b-2 border-gray-300 focus:outline-none focus:border-fonafen-green align-baseline">, sous ma responsabilité et conformément aux lois de la RDC.</p>
+                                <div class="flex items-center space-x-4 pt-4">
+                                    <span>Fait à</span> <input type="text" name="declaration_lieu" placeholder="Lieu" required class="w-48 px-2 py-1 border border-gray-300 rounded-md focus:ring-fonafen-green focus:border-fonafen-green">,
+                                    <span>le</span> <input type="date" name="declaration_date" required class="w-48 px-2 py-1 border border-gray-300 rounded-md focus:ring-fonafen-green focus:border-fonafen-green">
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="mt-8 pt-5 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-end gap-4">
+                            <a href="index.html" class="w-full sm:w-auto text-center bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg transition duration-300">Annuler</a>
+                            <button type="submit" class="w-full sm:w-auto bg-fonafen-green hover:bg-fonafen-green-dark text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105"><i class="fas fa-paper-plane mr-2"></i>Soumettre la demande</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+                 <div class="flex flex-col items-center md:items-start">
+                    <img src="logofonafen.png" alt="Logo FONAFEN" class="h-20 w-auto mb-4 bg-white p-2 rounded-full">
+                    <p class="text-gray-400">FONDS NATIONAL POUR LA PROMOTION DE LA FEMME ET LA PROTECTION DE L'ENFANT</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-4 flex items-center justify-center md:justify-start"><i class="fas fa-map-marked-alt mr-2"></i>Adresse</h3>
+                    <p class="text-gray-400 flex items-start"><i class="fas fa-map-marker-alt mt-1 mr-3 flex-shrink-0"></i><span>Boulevard du 30 Juin n°2164, Gombe / Kinshasa, RDC</span></p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-4 flex items-center justify-center md:justify-start"><i class="fas fa-address-book mr-2"></i>Contact & Suivez-nous</h3>
+                    <p class="text-gray-400"><a href="mailto:contact@fonafen.gouv.cd" class="hover:text-white flex items-center"><i class="fas fa-envelope w-6 mr-2"></i><span>contact@fonafen.gouv.cd</span></a></p>
+                    <p class="text-gray-400 mt-2"><a href="tel:+24381450510" class="hover:text-white flex items-center"><i class="fas fa-phone w-6 mr-2"></i><span>(+243) 081 450 510</span></a></p>
+                    <div class="mt-4 flex justify-center md:justify-start space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white" aria-label="Facebook"><i class="fab fa-facebook-f text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white" aria-label="Twitter"><i class="fab fa-twitter text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white" aria-label="Instagram"><i class="fab fa-instagram text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white" aria-label="LinkedIn"><i class="fab fa-linkedin-in text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white" aria-label="YouTube"><i class="fab fa-youtube text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white" aria-label="WhatsApp"><i class="fab fa-whatsapp text-2xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-700 pt-6 text-center text-gray-500 text-sm"><p>© 2025 imperium house group. Tous droits réservés.</p></div>
+        </div>
+    </footer>
+
+    <!-- Notification Modal -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-[100] hidden items-center justify-center p-4">
+        <div id="modal-content" class="bg-white rounded-lg shadow-2xl p-6 sm:p-8 w-full max-w-md transform scale-95 opacity-0">
+            <div class="flex items-center">
+                <div id="modal-icon" class="w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                    <i class="fas text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h3 id="modal-title" class="text-xl font-bold text-gray-800"></h3>
+                    <p id="modal-message" class="text-gray-600 mt-1"></p>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button id="modal-close" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-5 rounded-lg transition duration-300">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const demoData = [
+            { id: 1, nom: "Mbappe", postnom: "Lottin", prenom: "Kylian", photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Kylian_Mbapp%C3%A9_in_2021.jpg/800px-Kylian_Mbapp%C3%A9_in_2021.jpg", sexe: "Masculin", date_naissance: '1998-12-20', lieu_naissance: 'Paris', nationalite: 'Française', passeport: '19AB12345', province: "Kinshasa", district: 'N/A', territoire: 'Gombe', secteur: 'N/A', avenue: 'des Ambassadeurs', maison: 'n° 12', tuteur: 'Wilfrid Mbappe', tuteur_nom: "Mbappe", tuteur_prenom: "Wilfrid", tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=WM', tuteur_sexe: 'M', tuteur_lieu_naissance: 'Douala, Cameroun', tuteur_telephone: '+243 81 123 4567', tuteur_lien: 'Père', tuteur_adresse_complete: '12, Avenue des Ambassadeurs, Gombe, Kinshasa', tuteur_type_piece: "Passeport", tuteur_piece_identite: 'CE0123456789', voyage_adresse: 'Centre sportif de Madrid, Espagne', voyage_destination: 'Madrid, Espagne', voyage_motif: 'Stage de football', voyage_debut: '2025-07-01', voyage_fin: '2025-08-15', declaration_lieu: 'Kinshasa', declaration_date: '2025-06-10', fichiers: { "Pièce d'identité du tuteur": "identite_tuteur.pdf", "Acte de naissance de l'enfant": "acte_naissance.pdf" } },
+            { id: 2, nom: "Tshala", postnom: "Muana", prenom: "Elisabeth", photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=TM", sexe: "Féminin", date_naissance: '1958-05-13', lieu_naissance: 'Luluabourg', nationalite: 'Congolaise', passeport: 'PA1234567', province: "Kasaï-Oriental", district: 'N/A', territoire: 'Miabi', secteur: 'Bena-Kanyuka', avenue: 'de la Paix', maison: 'n° 10', tuteur: 'Claude Mashala', tuteur_nom: "Mashala", tuteur_prenom: "Claude", tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=CM', tuteur_sexe: 'M', tuteur_lieu_naissance: 'Kinshasa', tuteur_telephone: '+243 82 234 5678', tuteur_lien: 'Manager', tuteur_adresse_complete: '10, Avenue de la Paix, Limete, Kinshasa', tuteur_type_piece: "Carte d'identité", tuteur_piece_identite: 'CE9876543210', voyage_adresse: 'Olympia, Paris, France', voyage_destination: 'Paris, France', voyage_motif: 'Concert', voyage_debut: '2025-09-01', voyage_fin: '2025-09-30', declaration_lieu: 'Kinshasa', declaration_date: '2025-08-15', fichiers: { "Contrat de spectacle": "contrat_olympia.pdf" } },
+            { id: 3, nom: "Diallo", postnom: "", prenom: "Fatou", photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=FD", sexe: "Féminin", date_naissance: '2010-05-15', lieu_naissance: 'Bukavu', nationalite: 'Congolaise', passeport: 'PC2345678', province: "Sud-Kivu", district: 'Sud-Kivu', territoire: 'Kabare', secteur: 'Kabare', avenue: "de l'Université", maison: 'n° 30', tuteur: 'Moussa Diallo', tuteur_nom: "Diallo", tuteur_prenom: "Moussa", tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=MD', tuteur_sexe: 'M', tuteur_lieu_naissance: 'Dakar, Sénégal', tuteur_telephone: '+243 99 111 2233', tuteur_lien: 'Oncle', tuteur_adresse_complete: "30, Avenue de l'Université, Kabare, Sud-Kivu", tuteur_type_piece: "Carte d'électeur", tuteur_piece_identite: 'CE1122334455', voyage_adresse: 'Lycée Français, Bruxelles, Belgique', voyage_destination: 'Bruxelles, Belgique', voyage_motif: 'Etudes', voyage_debut: '2025-09-01', voyage_fin: '2026-06-30', declaration_lieu: 'Bukavu', declaration_date: '2025-08-10', fichiers: {} },
+            { id: 4, nom: "Dupont", postnom: "", prenom: "Jean", photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=JD", sexe: "Masculin", date_naissance: '2012-08-22', lieu_naissance: 'Lubumbashi', nationalite: 'Congolaise', passeport: 'PD3456789', province: "Haut-Katanga", district: 'Haut-Katanga', territoire: 'Kipushi', secteur: 'Kaponda', avenue: 'Lumumba', maison: 'n° 100', tuteur: 'Marie Dupont', tuteur_nom: "Dupont", tuteur_prenom: "Marie", tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=MD', tuteur_sexe: 'F', tuteur_lieu_naissance: 'Kolwezi', tuteur_telephone: '+243 85 444 5566', tuteur_lien: 'Mère', tuteur_adresse_complete: '100, Avenue Lumumba, Kipushi, Haut-Katanga', tuteur_type_piece: "Carte d'identité", tuteur_piece_identite: 'CE5566778899', voyage_adresse: 'Disneyland Paris, France', voyage_destination: 'Paris, France', voyage_motif: 'Vacances', voyage_debut: '2025-07-15', voyage_fin: '2025-07-30', declaration_lieu: 'Lubumbashi', declaration_date: '2025-06-20', fichiers: {} },
+            { id: 5, nom: "Omar", postnom: "", prenom: "Aisha", photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=AO", sexe: "Féminin", date_naissance: '2008-02-10', lieu_naissance: 'Goma', nationalite: 'Congolaise', passeport: 'PE4567890', province: "Nord-Kivu", district: 'Nord-Kivu', territoire: 'Masisi', secteur: 'Katoyi', avenue: 'des Volcans', maison: 'n° 55', tuteur: 'Ali Omar', tuteur_nom: "Omar", tuteur_prenom: "Ali", tuteur_photo: 'https://placehold.co/200x200/e2e8f0/cbd5e0?text=AO', tuteur_sexe: 'M', tuteur_lieu_naissance: 'Goma', tuteur_telephone: '+243 97 777 8899', tuteur_lien: 'Père', tuteur_adresse_complete: '55, Avenue des Volcans, Masisi, Nord-Kivu', tuteur_type_piece: "Passeport", tuteur_piece_identite: 'CE9988776655', voyage_adresse: 'Hôpital King Faisal, Kigali, Rwanda', voyage_destination: 'Kigali, Rwanda', voyage_motif: 'Soins medicaux', voyage_debut: '2025-10-05', voyage_fin: '2025-11-05', declaration_lieu: 'Goma', declaration_date: '2025-09-15', fichiers: {} }
+        ];
+        const divisions = { "Kongo-Central": { "Bas-Fleuve": { "Kasangulu": ["Kasangulu", "Luila", "Lukunga-Mputu"], "Kimvula": ["Benga", "Lubisi", "Lula-Lumene"], "Lukula": ["Fubu", "Kakongo", "Patu", "Tsanga-Sud", "Tsundi-Sud"], "Luozi": ["Balari", "Kenge", "Kimbanza", "Kimumba", "Kinkenge", "Kivunda", "Mbanza Mona", "Mbanza Mwembe", "Mbanza Ngoyo", "Mongo Luala"], "Madimba": ["Kinkosi (Luidi)", "Mfidi Malele", "Mfuma-Kibambi", "Ngeba", "Ngufu", "Wungu"], "Mbanza-Ngungu": ["Boko", "Gombe-Matadi", "Gombe-Sud", "Kivulu", "Kwilu-Ngongo", "Lunzadi", "Ntimansi"], "Moanda": ["Assolongo", "Boma-Bungu", "la Mer"], "Seke-Banza": ["Bundi", "Isangila", "Lufu", "Mbavu", "Sumbi"], "Songololo": ["Bamboma", "Kimpese", "Luima", "Palabala", "Wombo"], "Tshela": ["Bula-Naku", "Loango", "Lubolo", "Lubuzi", "Maduda", "Nganda-Tsundi", "Nzobe Luzi", "Tshela Banga"] }}, "Kwango": { "Kwango": { "Feshi": ["Feshi Maziamo", "Ganaketi", "Lobo", "Mukoso"], "Kahemba": ["Muloshi", "Mwa-Mushiko", "Mwendjila", "Bangu", "Bindu", "Kulindji"], "Kasongo-Lunda": ["Kasa", "Kasongo-Lunda", "Kibunda", "Kingulu", "Kizamba", "Mawanga", "Panzi", "Swa-Tenda"], "Kenge": ["Pelende-Nord", "Bukanga-Lonzo", "Dinga", "Kolokoso", "Mosamba"], "Popokabaka": ["Lufuma", "Popokabaka", "Yonso"] }}, "Kwilu": { "Kwilu": { "Bagata": ["Kidzweme", "Kwango-Kasai", "Kwilu-Ntober", "Manzasay", "Wamba-Fatundu"], "Bulungu": ["Dwe", "Imbongo", "Kilunda", "Kipuka", "Kwenge", "Kwilu-Kimbata", "Luniungu", "Mikwi", "Niadi-Nkara", "Nko"], "Gungu": ["Gungu", "Kandale", "Kilamba", "Kilembe", "Kisunzu", "Kobo (Mosala)", "Kondo", "Lozo", "Lukamba", "Mudikalunga", "Mungindu", "Ngudi"], "Idiofa": ["Banga", "Belo", "Bulwem", "Kalanganda", "Kanga", "Kapia", "Kipuku", "Madimbi", "Mateko", "Musanga-Idiofa", "Sedzo", "Yasa-Lokwa"], "Masi-Manimba": ["Bindungi", "Kibolo", "Kinzenga", "Kinzenzengo", "Kitoy", "Masi-Manimba", "Mokamo", "Mosango", "Pay-Kongila", "Sungu"] }}, "Mai-Ndombe": { "Mai-Ndombe": { "Bolobo": ["Bateke-Nord"], "Inongo": ["Basengele", "Bolia", "Inongo"], "Kiri": ["Beronge", "Lotoy (Lutoy)", "Pendjwa"], "Kutu": ["Badia", "Batere", "Kemba", "Lwabo (Luabu)", "Mfimi"], "Kwamouth": ["Bateke-Sud/Twa"], "Mushie": ["Baboma-Nord"], "Oshwe": ["E.L.L. (Entre Lukenie-Lokoro) Nkaw", "Kangara", "Lokolama", "Lukenie"], "Yumbi": ["Mongama"] }}, "Équateur": { "Équateur": { "Basankusu": ["Bolomboko", "Duali", "Engoko", "Lobenga", "Lulonga", "Mompono", "Ngiri", "Nkile"], "Bikoro": ["Elanga", "Ekonda", "Ikoko-Bonginda", "Ingende", "Losanganya"], "Bomongo": ["Bomongo", "Dongo", "Libenge"], "Lukolela": ["Lukolela", "Busira"], "Makanza": ["Bokatola", "Lulonga"] }}, "Mongala": { "Mongala": { "Bumba": ["Bampombe", "Bapamba", "Bangando", "Bangengele", "Banunu-Bobangi", "Mongwandi"], "Bongandanga": ["Bokatola", "Bosondjo", "Mondunga"], "Lisala": ["Dongo", "Ngbanda", "Ngombe", "Mongala"] }}, "Nord-Ubangi": { "Nord-Ubangi": { "Bosobolo": ["Banga", "Bobanda", "Mwingi"], "Businga": ["Karawa", "Libopi", "Likati", "Moenge"], "Mobayi-Mbongo": ["Banga", "Gbado", "Ngbanza"], "Yakoma": ["Gbadolite", "Gbanziri", "Gbowo", "Yakoma"] }}, "Sud-Ubangi": { "Sud-Ubangi": { "Gemena": ["Gbado", "Libenge", "Mopoy"], "Kungu": ["Banga", "Libinza", "Dongo", "Ngbanda"], "Libenge": ["Libenge", "Ngiri", "Ubangi"], "Zongo": ["Zongo"] }}, "Tshuapa": { "Tshuapa": { "Befale": ["Befale", "Boangi", "Bokatola", "Duali"], "Boende": ["Boende", "Djonga", "Ikela-Sud", "Bokungu"], "Bokungu": ["Bokungu", "Lofome", "Lomela", "Monkoto"], "Djolu": ["Djolu", "Ikela-Nord", "Lompole"], "Ikela": ["Ikela", "Lokelo", "Tshuapa"], "Monkoto": ["Monkoto", "Bokatola", "Bosanga"] }}, "Haut-Uele": { "Haut-Uele": { "Dungu": ["Dungu", "Uele", "Kibali"], "Faradje": ["Kere", "Logo Ogambi", "Logo Lolia"], "Niangara": ["Kibali", "Kopa", "Madi"], "Rungu": ["Logo", "Ndo"], "Wamba": ["Bafwabaka", "Bafwasende", "Mambasa"], "Watsa": ["Kibali", "Mondo-Missa", "Logo"] }}, "Bas-Uele": { "Bas-Uele": { "Aketi": ["Bima", "Avuru", "Ngindo"], "Ango": ["Bili", "Bomu", "Ngindo"], "Bambesa": ["Bangelema", "Makere"], "Bondo": ["Bima", "Deni", "Gangu", "Ngindo"], "Buta": ["Avuru", "Bambesa", "Monganzulu"], "Poko": ["Bili", "Makere", "Ndo"] }}, "Ituri": { "Ituri": { "Aru": ["Kakwa", "Logo Lolia", "Logo Ogambi", "Zaki"], "Djugu": ["Bahema-Nord", "Bahema-Sud", "Walendu-Bindi", "Walendu-Djatsi", "Walendu-Pitsi"], "Irumu": ["Walese-Vonkutu", "Walese-Dese", "Basili", "Bakwanza", "Banyali"], "Mahagi": ["Alur Djuganda", "Alur Kebo", "Alur Sika", "Alur Nyarambe", "Alur War-Palara"], "Mambasa": ["Bombo", "Bandaka", "Babila-Babombi", "Walese-Karo"] }}, "Tshopo": { "Tshopo": { "Bafwasende": ["Baleka", "Bamanga", "Bakumu", "Bafwambaya"], "Banalia": ["Bangelema", "Baboa-Bokengu", "Bakumu-Balongo"], "Isangi": ["Bakumu-Lokombe", "Bamanga", "Bangelema"], "Opala": ["Baleka", "Topoke", "Lokele"], "Ubundu": ["Bamanga", "Baleka", "Bangelema"], "Yahuma": ["Bakumu", "Lese", "Kumu"] }}, "Kasaï": { "Kasaï": { "Dekese": ["Dekese", "Bena-Dibele"], "Ilebo": ["Banga", "Kwilu-Kimbata", "Basongo"], "Luebo": ["Luebo", "Kasai", "Bakwa Kalonji"] }}, "Kasaï-Central": { "Kasaï-Central": { "Demba": ["Bena-Mwamba", "Bena-Kabongo"], "Dibaya": ["Bena-Ngoshi", "Bena-Mpuka"], "Kazumba": ["Lutshima", "Bena-Mfuilu"], "Luiza": ["Bena-Mbuyi", "Bakwa-Kalonji"], "Dimbelenge": ["Bena-Tshibuyi", "Bena-Mulumba"] }}, "Kasaï-Oriental": { "Kasaï-Oriental": { "Kabeya-Kamwanga": ["Bakwa-Dishi", "Bena-Tshibanda"], "Miabi": ["Bena-Kanyuka", "Bena-Tshilomba"], "Lupatapata": ["Bena-Tshilolo", "Bena-Tshibanda"] }}, "Lomami": { "Lomami": { "Kamiji": ["Bakwa-Mulumba", "Bena-Kanyoka"], "Luilu": ["Bakwa-Kalonji", "Bena-Tshibangu"], "Ngandajika": ["Bakwa-Ndoba", "Bena-Nshimba"] }}, "Sankuru": { "Sankuru": { "Katako-Kombe": ["Katako-Kombe", "Bakwa-Meya"], "Kole": ["Kole", "Tschofa"], "Lodja": ["Lodja", "Ikolombe", "Ototo"], "Lomela": ["Lomela", "Befale"], "Lubefu": ["Lubefu", "Bena-Mpungu"], "Lusambo": ["Lusambo", "Bena-Tshiala"] }}, "Haut-Katanga": { "Haut-Katanga": { "Kasenga": ["Bunkeya", "Kiluba", "Kaponda"], "Kipushi": ["Kaponda", "Lubudi"], "Mitwaba": ["Mulongo", "Mwenge"], "Pweto": ["Kiluba", "Pweto"] }}, "Haut-Lomami": { "Haut-Lomami": { "Bukama": ["Mulongo", "Kabondo-Dianda"], "Kabongo": ["Bena-Kabongo", "Kalunga"], "Kamina": ["Bena-Mwamba", "Katshibu"], "Kaniama": ["Lwena", "Bena-Kalamba"], "Malemba-Nkulu": ["Mulongo", "Mwenge"] }}, "Lualaba": { "Lualaba": { "Dilolo": ["Dilolo", "Lualaba"], "Kapanga": ["Kapanga", "Luiza"], "Mutshatsha": ["Fungurume", "Mitwaba"] }}, "Tanganyika": { "Tanganyika": { "Kabalo": ["Kabalo", "Lukuga"], "Kalemie": ["Kalemie", "Kyombo"], "Kongolo": ["Kongolo", "Ngandja"], "Manono": ["Kibanda", "Kyombo"], "Moba": ["Moba", "Pweto"], "Nyunzu": ["Kabalo", "Nyunzu"] }}, "Maniema": { "Maniema": { "Kabambare": ["Babira-Banda", "Balanga", "Bangubangu"], "Kailo": ["Bangengele", "Batetela", "Lega"], "Kasongo": ["Babira", "Batetela", "Lega"], "Kibombo": ["Bangengele", "Batetela", "Lega"], "Lubutu": ["Bangengele", "Batetela", "Mituku"], "Punia": ["Bakongola", "Batetela", "Lega"], "Pangi": ["Bangubangu", "Batetela", "Lega"] }}, "Nord-Kivu": { "Nord-Kivu": { "Beni": ["Beni-Mbau", "Beni-Mangina", "Ruwenzori"], "Lubero": ["Bapere", "Baswagha", "Batangi", "Bapakombe"], "Masisi": ["Katoyi", "Bashali", "Osso-Banyungu"], "Rutshuru": ["Bwisha", "Bwito", "Rugari"], "Walikale": ["Bakano", "Wanianga"] }}, "Sud-Kivu": { "Sud-Kivu": { "Fizi": ["Mutambala", "Ngandja", "Tanganyika"], "Idjwi": ["Rubenga", "Ntambuka"], "Kabare": ["Kabare", "Nindja"], "Kalehe": ["Buhavu", "Buloho", "Nyalubanja"], "Mwenga": ["Itombwe", "Basile", "Wamuzimu"], "Shabunda": ["Lulenge", "Wakabango I", "Wakabango II"], "Uvira": ["Bafuliiru", "Bavira", "Tanganyika"] }}, "Kinshasa": { "communes": ["Bandalungwa", "Barumbu", "Bumbu", "Binza-Ozone", "Gombe", "Kalamu", "Kasa-Vubu", "Kimbanseke", "Kintambo", "Kisenso", "Lemba", "Limete", "Lingwala", "Makala", "Maluku", "Masina", "Matete", "Mont Ngafula", "N'djili", "Nsele", "Ngaba", "Ngaliema", "Selembao"] } };
+
+        let enregistrements = [];
+
+        const ui = {
+            preloader: document.getElementById('preloader'),
+            exitForm: document.getElementById('child-exit-form'),
+            photoEnfantPreview: document.getElementById('photo-enfant-preview'),
+            photoEnfantInput: document.getElementById('photo-enfant'),
+            photoTuteurPreview: document.getElementById('photo-tuteur-preview'),
+            photoTuteurInput: document.getElementById('photo-tuteur'),
+            provinceSelect: document.getElementById('province'),
+            districtSelect: document.getElementById('district'),
+            territoireSelect: document.getElementById('territoire'),
+            secteurSelect: document.getElementById('secteur'),
+            territoireLabel: document.getElementById('territoire-label'),
+            secteurLabel: document.getElementById('secteur-label'),
+            modalBackdrop: document.getElementById('modal-backdrop'),
+            modalContent: document.getElementById('modal-content'),
+            modalIcon: document.getElementById('modal-icon'),
+            modalIconI: document.querySelector('#modal-icon i'),
+            modalTitle: document.getElementById('modal-title'),
+            modalMessage: document.getElementById('modal-message'),
+            modalClose: document.getElementById('modal-close'),
+        };
+
+        const loadFromLocalStorage = () => {
+            const data = localStorage.getItem('enregistrements_fonafen');
+            enregistrements = data ? JSON.parse(data) : demoData;
+        };
+
+        const saveToLocalStorage = () => {
+            localStorage.setItem('enregistrements_fonafen', JSON.stringify(enregistrements));
+        };
+
+        const showModal = (type, title, message) => {
+            const icons = { success: 'fa-check', error: 'fa-times' };
+            const colors = { success: 'bg-green-500', error: 'bg-red-500' };
+            ui.modalIcon.className = `w-12 h-12 rounded-full flex items-center justify-center mr-4 ${colors[type]}`;
+            ui.modalIconI.className = `fas ${icons[type]} text-2xl text-white`;
+            ui.modalTitle.textContent = title;
+            ui.modalMessage.textContent = message;
+            ui.modalBackdrop.classList.remove('hidden');
+            ui.modalBackdrop.classList.add('flex');
+            setTimeout(() => {
+                ui.modalBackdrop.classList.remove('opacity-0');
+                ui.modalContent.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        };
+
+        const closeModal = () => {
+            ui.modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                ui.modalBackdrop.classList.add('hidden');
+                ui.modalBackdrop.classList.remove('flex');
+            }, 300);
+        };
+        ui.modalClose.addEventListener('click', closeModal);
+
+        if (ui.exitForm) {
+            ui.exitForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const formData = new FormData(ui.exitForm);
+                const formValues = Object.fromEntries(formData.entries());
+
+                const newEnfant = {
+                    id: Date.now(),
+                    nom: formValues.enfant_nom,
+                    prenom: formValues.enfant_prenom,
+                    photo: ui.photoEnfantPreview.src,
+                    sexe: formValues.enfant_sexe === 'M' ? 'Masculin' : 'Féminin',
+                    date_naissance: formValues.enfant_date_naissance,
+                    lieu_naissance: formValues.enfant_lieu_naissance,
+                    nationalite: formValues.enfant_nationalite,
+                    passeport: formValues.enfant_passeport,
+                    province: formValues.province,
+                    district: formValues.district,
+                    territoire: formValues.territoire,
+                    secteur: formValues.secteur,
+                    avenue: formValues.enfant_avenue,
+                    maison: formValues.enfant_maison,
+                    tuteur: `${formValues.tuteur_prenom} ${formValues.tuteur_nom}`,
+                    tuteur_nom: formValues.tuteur_nom,
+                    tuteur_prenom: formValues.tuteur_prenom,
+                    tuteur_photo: ui.photoTuteurPreview.src,
+                    tuteur_sexe: formValues.tuteur_sexe,
+                    tuteur_lieu_naissance: formValues.tuteur_lieu_naissance,
+                    tuteur_telephone: `(+243) ${formValues.tuteur_telephone}`,
+                    tuteur_lien: formValues.tuteur_lien,
+                    tuteur_adresse_complete: formValues.tuteur_adresse,
+                    tuteur_type_piece: formValues.tuteur_type_piece,
+                    tuteur_piece_identite: formValues.tuteur_piece_identite,
+                    voyage_adresse: formValues.voyage_adresse,
+                    voyage_destination: formValues.voyage_destination,
+                    voyage_motif: formValues.voyage_motif === 'Autre' ? formValues.voyage_motif_autre : formValues.voyage_motif,
+                    voyage_debut: formValues.voyage_debut,
+                    voyage_fin: formValues.voyage_fin,
+                    declaration_lieu: formValues.declaration_lieu,
+                    declaration_date: formValues.declaration_date,
+                    fichiers: {}
+                };
+                enregistrements.push(newEnfant);
+                saveToLocalStorage();
+                showModal('success', 'Demande Enregistrée!', 'Votre demande a été enregistrée avec succès.');
+                ui.exitForm.reset();
+                ui.photoEnfantPreview.src = 'https://placehold.co/128x128/e2e8f0/cbd5e0?text=Photo';
+                ui.photoTuteurPreview.src = 'https://placehold.co/128x128/e2e8f0/cbd5e0?text=Photo';
+
+                setTimeout(() => {
+                    closeModal();
+                    window.location.href = 'consulter.html';
+                }, 2500);
+            });
+        }
+
+        const handlePhotoPreview = (input, preview) => {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => { preview.src = e.target.result; };
+                reader.readAsDataURL(file);
+            }
+        };
+        ui.photoEnfantInput.addEventListener('change', () => handlePhotoPreview(ui.photoEnfantInput, ui.photoEnfantPreview));
+        ui.photoTuteurInput.addEventListener('change', () => handlePhotoPreview(ui.photoTuteurInput, ui.photoTuteurPreview));
+
+        const populateSelects = () => {
+            Object.keys(divisions).sort().forEach(province => {
+                ui.provinceSelect.add(new Option(province, province));
+            });
+        };
+
+        const resetSelect = (select, placeholder) => {
+            select.innerHTML = `<option value="">${placeholder}</option>`;
+            select.disabled = true;
+            select.classList.add('bg-gray-200');
+        };
+
+        ui.provinceSelect.addEventListener('change', () => {
+            const selectedProvince = ui.provinceSelect.value;
+            resetSelect(ui.districtSelect, 'Sélectionner un district...');
+            resetSelect(ui.territoireSelect, 'Sélectionner un territoire...');
+            resetSelect(ui.secteurSelect, 'Sélectionner un secteur...');
+
+            ui.territoireLabel.textContent = "Territoire";
+            ui.secteurLabel.style.display = 'block';
+            ui.secteurSelect.style.display = 'block';
+            ui.secteurSelect.required = true;
+
+            if (!selectedProvince) return;
+
+            if (selectedProvince === "Kinshasa") {
+                ui.districtSelect.innerHTML = `<option value="N/A">N/A</option>`;
+                ui.districtSelect.disabled = true;
+                ui.territoireLabel.textContent = "Commune";
+                ui.secteurLabel.style.display = 'none';
+                ui.secteurSelect.style.display = 'none';
+                ui.secteurSelect.required = false;
+
+                ui.territoireSelect.disabled = false;
+                ui.territoireSelect.classList.remove('bg-gray-200');
+                divisions[selectedProvince].communes.forEach(commune => {
+                    ui.territoireSelect.add(new Option(commune, commune));
+                });
+            } else {
+                ui.districtSelect.disabled = false;
+                ui.districtSelect.classList.remove('bg-gray-200');
+                Object.keys(divisions[selectedProvince]).forEach(district => {
+                    ui.districtSelect.add(new Option(district, district));
+                });
+            }
+        });
+
+        ui.districtSelect.addEventListener('change', () => {
+            const selectedProvince = ui.provinceSelect.value;
+            const selectedDistrict = ui.districtSelect.value;
+            resetSelect(ui.territoireSelect, 'Sélectionner un territoire...');
+            resetSelect(ui.secteurSelect, 'Sélectionner un secteur...');
+
+            if (selectedProvince && selectedDistrict && selectedProvince !== "Kinshasa") {
+                ui.territoireSelect.disabled = false;
+                ui.territoireSelect.classList.remove('bg-gray-200');
+                Object.keys(divisions[selectedProvince][selectedDistrict]).forEach(territoire => {
+                    ui.territoireSelect.add(new Option(territoire, territoire));
+                });
+            }
+        });
+
+        ui.territoireSelect.addEventListener('change', () => {
+            const selectedProvince = ui.provinceSelect.value;
+            const selectedDistrict = ui.districtSelect.value;
+            const selectedTerritoire = ui.territoireSelect.value;
+            resetSelect(ui.secteurSelect, 'Sélectionner un secteur...');
+
+            if (selectedProvince && selectedDistrict && selectedTerritoire && selectedProvince !== "Kinshasa") {
+                ui.secteurSelect.disabled = false;
+                ui.secteurSelect.classList.remove('bg-gray-200');
+                divisions[selectedProvince][selectedDistrict][selectedTerritoire].forEach(secteur => {
+                    ui.secteurSelect.add(new Option(secteur, secteur));
+                });
+            }
+        });
+
+
+        window.addEventListener('load', () => {
+            ui.preloader.style.opacity = '0';
+            setTimeout(() => { ui.preloader.style.display = 'none'; }, 500);
+            loadFromLocalStorage();
+            populateSelects();
+        });
+    });
+    </script>
+</body>
+</html>
