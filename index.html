@@ -140,7 +140,7 @@
                         Consulter
                     </button>
                     <button id="btn-enregistrer-nav" class="bg-fonafen-green hover:bg-fonafen-green-dark text-white font-bold py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105">
-                        Faire une demande
+                        Enregistrer
                     </button>
                 </nav>
             </div>
@@ -159,7 +159,7 @@
                 </p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up" style="animation-delay: 0.4s;">
                     <button id="btn-enregistrer" class="w-full sm:w-auto bg-fonafen-green hover:bg-fonafen-green-dark text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-lg">
-                        <i class="fas fa-file-alt mr-2"></i> Demande de sortie
+                        <i class="fas fa-file-alt mr-2"></i> Enregistrer
                     </button>
                     <button id="btn-consulter" class="w-full sm:w-auto bg-white hover:bg-gray-200 text-fonafen-green font-bold py-3 px-8 rounded-lg text-lg transition duration-300 shadow-lg">
                         Consulter les fiches
@@ -204,7 +204,7 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="max-w-4xl mx-auto">
                     <div class="text-center mb-10 reveal">
-                        <h2 class="text-3xl md:text-4xl font-bold text-gray-800">DEMANDE D’AUTORISATION DE SORTIE D’UN ENFANT MINEUR</h2>
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-800">ENREGISTREMENT D’AUTORISATION DE SORTIE D’UN ENFANT MINEUR</h2>
                         <p class="mt-2 text-gray-600">Veuillez remplir les informations ci-dessous avec précision.</p>
                     </div>
                     <form id="child-exit-form" class="bg-gray-50 p-8 rounded-xl shadow-lg border border-gray-200 space-y-8">
@@ -325,37 +325,14 @@
                             </div>
                         </fieldset>
 
-                        <!-- Pièces à joindre -->
-                        <fieldset class="border-t-2 border-gray-300 pt-6 reveal" style="--delay: 0.4s;">
-                            <legend class="text-xl font-bold text-gray-800 px-4">Pièces à joindre au dossier (Facultatif)</legend>
-                            <div class="mt-4 space-y-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 items-center">
-                                    <label for="file_acte_naissance" class="text-gray-700">Copie de l’acte de naissance de l’enfant.</label>
-                                    <input type="file" id="file_acte_naissance" name="file_acte_naissance" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-fonafen-green/10 file:text-fonafen-green hover:file:bg-fonafen-green/20 cursor-pointer">
-
-                                    <label for="file_passeport_enfant" class="text-gray-700">Copie du passeport valide de l’enfant.</label>
-                                    <input type="file" id="file_passeport_enfant" name="file_passeport_enfant" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-fonafen-green/10 file:text-fonafen-green hover:file:bg-fonafen-green/20 cursor-pointer">
-
-                                    <label for="file_identite_parents" class="text-gray-700">Copies des pièces d’identité des parents.</label>
-                                    <input type="file" id="file_identite_parents" name="file_identite_parents" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-fonafen-green/10 file:text-fonafen-green hover:file:bg-fonafen-green/20 cursor-pointer">
-
-                                    <label for="file_autorisation_parentale" class="text-gray-700">Autorisation parentale légalisée.</label>
-                                    <input type="file" id="file_autorisation_parentale" name="file_autorisation_parentale" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-fonafen-green/10 file:text-fonafen-green hover:file:bg-fonafen-green/20 cursor-pointer">
-
-                                    <label for="file_preuve_motif" class="text-gray-700">Preuve du motif du voyage.</label>
-                                    <input type="file" id="file_preuve_motif" name="file_preuve_motif" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-fonafen-green/10 file:text-fonafen-green hover:file:bg-fonafen-green/20 cursor-pointer">
-                                </div>
-                            </div>
-                        </fieldset>
-
                         <!-- Sections pour avis officiels (non-éditable par l'utilisateur) -->
                         <div class="space-y-6 bg-gray-100 p-6 rounded-lg mt-8 reveal" style="--delay: 0.5s;">
                             <h3 class="text-center font-bold text-gray-600 text-lg">PARTIE RÉSERVÉE À L'ADMINISTRATION (Pour information)</h3>
-                            <!-- V. Avis de la FENAFEN -->
+                            <!-- V. Avis de la FONAFEN -->
                             <fieldset>
-                                <legend class="text-lg font-semibold text-gray-700">V. Avis de la FENAFEN</legend>
+                                <legend class="text-lg font-semibold text-gray-700">V. Avis de la FONAFEN</legend>
                                 <div class="mt-2 space-y-3 text-gray-600">
-                                    <p>Nous, Fédération Nationale des Femmes du Congo (FENAFEN), attestons que la présente demande s’inscrit dans le cadre de ... et recommandons l’autorisation de sortie de l’enfant.</p>
+                                    <p>Conformément au <strong>Décret n° 09/37 du 10 octobre 2009</strong> portant création, organisation et fonctionnement d'un Etablissement public dénommé « Fonds National pour la Promotion de la Femme et la Protection de l'Enfant », nous, la Fédération Nationale des Femmes du Congo (FONAFEN), attestons que la présente enregistrement est conforme et recommandons l’autorisation de sortie de l’enfant.</p>
                                     <p class="pt-2"><strong>Nom et fonction de la représentante :</strong> Grace LUKOSI NGOY</p>
                                     <div class="flex items-end gap-8 mt-4">
                                         <div>
@@ -363,25 +340,9 @@
                                             <img src="SignatureFENAFEN.png" alt="Signature" class="h-16 mt-2">
                                         </div>
                                         <div>
-                                            <p><strong>Cachet FENAFEN :</strong></p>
-                                            <img src="CachetFENAFEN.png" alt="Cachet FENAFEN" class="h-24 w-24 mt-2">
+                                            <p><strong>Cachet FONAFEN :</strong></p>
+                                            <img src="CachetFENAFEN.png" alt="Cachet FONAFEN" class="h-24 w-24 mt-2">
                                         </div>
-                                    </div>
-                                </div>
-                            </fieldset>
-                            <!-- VI. Avis et Visa de l’Autorité Compétente -->
-                            <fieldset class="mt-6 border-t border-gray-300 pt-4">
-                                <legend class="text-lg font-semibold text-gray-700">VI. Avis et Visa de l’Autorité Compétente (Facultatif)</legend>
-                                <div class="mt-4 space-y-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 items-center">
-                                        <label for="file_visa_bourgmestre" class="text-gray-700">Visa du Bourgmestre / Officier de l’État civil (2MB max)</label>
-                                        <input type="file" id="file_visa_bourgmestre" name="file_visa_bourgmestre" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-fonafen-green/10 file:text-fonafen-green hover:file:bg-fonafen-green/20 cursor-pointer">
-
-                                        <label for="file_legalisation_tribunal" class="text-gray-700">Légalisation du Tribunal pour enfants (2MB max)</label>
-                                        <input type="file" id="file_legalisation_tribunal" name="file_legalisation_tribunal" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-fonafen-green/10 file:text-fonafen-green hover:file:bg-fonafen-green/20 cursor-pointer">
-
-                                        <label for="file_cachet_dgm" class="text-gray-700">Cachet et signature de la DGM (2MB max)</label>
-                                        <input type="file" id="file_cachet_dgm" name="file_cachet_dgm" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-fonafen-green/10 file:text-fonafen-green hover:file:bg-fonafen-green/20 cursor-pointer">
                                     </div>
                                 </div>
                             </fieldset>
@@ -415,7 +376,7 @@
                             <button id="btn-export-csv" class="bg-fonafen-gold hover:bg-opacity-80 text-white font-bold py-2 px-4 rounded-lg transition duration-300"><i class="fas fa-file-csv mr-2"></i>Exporter en CSV</button>
                         </div>
                     </div>
-                    <div id="resultats-recherche" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    <div id="resultats-recherche" class="space-y-4"></div>
                     <div id="aucun-resultat" class="hidden text-center py-10">
                         <i class="fas fa-box-open text-6xl text-gray-400 mb-4"></i>
                         <p class="text-gray-500 text-lg">Aucun enregistrement ne correspond à vos critères.</p>
@@ -537,11 +498,14 @@
                     <img src="logofonafen.png" alt="Logo FONAFEN" class="h-20 w-auto mb-4 bg-white p-2 rounded-full">
                     <p class="text-gray-400">FONDS NATIONAL POUR LA PROMOTION DE LA FEMME ET LA PROTECTION DE L’ENFANT</p>
                 </div>
-                <div><h3 class="font-bold text-lg mb-4">Adresse</h3><p class="text-gray-400">Boulevard du 30 Juin n°2164, Commune de la Gombe / Kinshasa, RDC</p></div>
                 <div>
-                    <h3 class="font-bold text-lg mb-4">Contact & Suivez-nous</h3>
-                    <p class="text-gray-400"><a href="mailto:contact@fonafen.gouv.cd" class="hover:text-white">contact@fonafen.gouv.cd</a></p>
-                    <p class="text-gray-400 mt-2">+243 81 622 42 21</p>
+                    <h3 class="font-bold text-lg mb-4 flex items-center justify-center md:justify-start"><i class="fas fa-map-marked-alt mr-2"></i>Adresse</h3>
+                    <p class="text-gray-400 flex items-start"><i class="fas fa-map-marker-alt mt-1 mr-3 flex-shrink-0"></i><span>Boulevard du 30 Juin n°2164, Commune de la Gombe / Kinshasa, RDC</span></p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-4 flex items-center justify-center md:justify-start"><i class="fas fa-address-book mr-2"></i>Contact & Suivez-nous</h3>
+                    <p class="text-gray-400"><a href="mailto:contact@fonafen.gouv.cd" class="hover:text-white flex items-center"><i class="fas fa-envelope w-6 mr-2"></i><span>contact@fonafen.gouv.cd</span></a></p>
+                    <p class="text-gray-400 mt-2 flex items-center"><i class="fas fa-phone w-6 mr-2"></i><span>+243 81 622 42 21</span></p>
                     <div class="mt-4 flex justify-center md:justify-start space-x-4">
                         <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-facebook-f text-2xl"></i></a>
                         <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-twitter text-2xl"></i></a>
@@ -1131,17 +1095,22 @@
 
             data.forEach(enfant => {
                 const card = document.createElement('div');
-                card.className = "bg-white rounded-lg shadow-md hover:shadow-xl cursor-pointer transition-all duration-300 transform hover:-translate-y-1 overflow-hidden reveal";
+                card.className = "bg-white rounded-lg shadow-md hover:shadow-xl cursor-pointer transition-all duration-300 hover:border-l-4 hover:border-fonafen-green overflow-hidden reveal";
                 card.dataset.id = enfant.id;
                 card.innerHTML = `
-                    <div class="flex items-center p-4">
-                        <img src="${enfant.photo}" alt="Photo de ${enfant.prenom}" class="h-16 w-16 rounded-full object-cover mr-4 border-2 border-gray-200">
-                        <div class="flex-1">
-                            <h4 class="font-bold text-gray-800 text-lg">${enfant.prenom} ${enfant.nom}</h4>
-                            <p class="text-sm text-gray-500">${enfant.province}</p>
-                            <p class="text-xs text-gray-400 mt-1">Tuteur: ${enfant.tuteur || 'N/A'}</p>
-                        </div>
-                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    <div class="flex items-start p-4 space-x-4">
+                         <img src="${enfant.photo}" alt="Photo de ${enfant.prenom}" class="h-24 w-24 rounded-lg object-cover border-2 border-gray-200 flex-shrink-0">
+                         <div class="flex-1">
+                             <h4 class="font-bold text-gray-800 text-xl">${enfant.prenom} ${enfant.nom}</h4>
+                             <div class="text-sm text-gray-500 mt-2 space-y-1">
+                                 <p><i class="fas fa-map-marker-alt w-4 mr-2 text-fonafen-green"></i>Province: <strong>${enfant.province}</strong></p>
+                                 <p><i class="fas fa-user-shield w-4 mr-2 text-fonafen-green"></i>Tuteur: <strong>${enfant.tuteur || 'N/A'}</strong></p>
+                                 <p><i class="fas fa-calendar-alt w-4 mr-2 text-fonafen-green"></i>Date de Naissance: <strong>${new Date(enfant.date_naissance).toLocaleDateString('fr-FR')}</strong></p>
+                             </div>
+                         </div>
+                         <div class="flex items-center h-full">
+                            <i class="fas fa-chevron-right text-gray-400 text-2xl"></i>
+                         </div>
                     </div>
                 `;
                 ui.resultatsDiv.appendChild(card);
