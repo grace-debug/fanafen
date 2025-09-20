@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FONAFEN - Plateforme Avancée</title>
+    <link rel="icon" href="https://fonafen.gouv.cd/wp-content/uploads/2023/09/cropped-LOGO-FONAFEN-HD-32x32.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        /* Couleurs et thèmes */
+        :root {
+            --fonafen-green: #008240;
+            --fonafen-green-dark: #006b35;
+            --fonafen-gold: #D4AF37;
+        }
+        .bg-fonafen-green { background-color: var(--fonafen-green); }
+        .text-fonafen-green { color: var(--fonafen-green); }
+        .border-fonafen-green { border-color: var(--fonafen-green); }
+        .ring-fonafen-green:focus { ring-color: var(--fonafen-green); }
+        .hover\:bg-fonafen-green-dark:hover { background-color: var(--fonafen-green-dark); }
+        .bg-fonafen-gold { background-color: var(--fonafen-gold); }
+
+        /* Effet "Glassmorphism" */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Transitions et Animations */
+        .section {
+            transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out;
+        }
+        .section.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            position: absolute;
+            width: 100%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
+
+        /* Animations au défilement */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Pré-chargeur amélioré */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #fff; z-index: 9999; display: flex;
+            align-items: center; justify-content: center; transition: opacity 0.5s ease-out;
+        }
+        .spinner {
+            width: 56px; height: 56px; border-radius: 50%;
+            border: 6px solid #f3f3f3; border-top: 6px solid var(--fonafen-green);
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Style pour l'input de fichier */
+        .custom-file-upload {
+            border: 2px dashed #ccc; transition: all 0.3s ease;
+        }
+        .custom-file-upload:hover { border-color: var(--fonafen-green); background-color: #f9f9f9; }
+
+        /* Modale personnalisée */
+        #modal-backdrop { transition: opacity 0.3s ease-in-out; }
+        #modal-content { transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; }
+
+        /* Styles pour l'impression */
+        @media print {
+            body * { visibility: hidden; }
+            #details-printable-area, #details-printable-area * { visibility: visible; }
+            #details-printable-area { position: absolute; left: 0; top: 0; width: 100%; padding: 1rem; }
+            header, footer, .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-700 antialiased">
+
+    <!-- Pré-chargeur -->
+    <div id="preloader"><div class="spinner"></div></div>
+
+    <!-- En-tête -->
+    <header id="main-header" class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div id="logo-fonafen-link" class="flex-shrink-0 cursor-pointer flex items-center gap-3">
+                    <img class="h-16 w-auto" src="logofonafen.png" alt="Logo FONAFEN">
+                    <span class="text-xl font-bold text-gray-800 hidden sm:block">FONAFEN</span>
+                </div>
+                <nav class="flex items-center gap-4">
+                    <a href="#accueil" class="nav-link text-gray-600 hover:text-fonafen-green font-medium">Accueil</a>
+                    <button id="btn-consulter-nav" class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-300">
+                        Consulter
+                    </button>
+                    <button id="btn-enregistrer-nav" class="bg-fonafen-green hover:bg-fonafen-green-dark text-white font-bold py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105">
+                        Enregistrer
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative">
+        <!-- Section d'accueil (Hero) avec slider -->
+        <section id="accueil" class="section min-h-[calc(100vh-80px)] flex items-center justify-center bg-cover bg-center transition-background-image duration-1000">
+            <div class="text-center text-white p-8 md:p-12 rounded-xl glass-effect max-w-4xl mx-4">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight text-shadow-lg animate-fade-in-down">
+                    Bienvenue sur la Plateforme d'Enregistrement
+                </h1>
+                <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto animate-fade-in-up" style="animation-delay: 0.2s;">
+                    FONDS NATIONAL POUR LA PROMOTION DE LA FEMME ET LA PROTECTION DE L'ENFANT
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up" style="animation-delay: 0.4s;">
+                    <button id="btn-enregistrer" class="w-full sm:w-auto bg-fonafen-green hover:bg-fonafen-green-dark text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-user-plus mr-2"></i> Enregistrer un enfant
+                    </button>
+                    <button id="btn-consulter" class="w-full sm:w-auto bg-white hover:bg-gray-200 text-fonafen-green font-bold py-3 px-8 rounded-lg text-lg transition duration-300 shadow-lg">
+                        Consulter les fiches
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Statistiques -->
+        <section id="statistiques" class="section py-20 bg-white reveal">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Nos statistiques en temps réel</h2>
+                    <p class="mt-2 text-gray-600">Un aperçu de notre impact à travers le pays.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-md">
+                        <i class="fas fa-child text-4xl text-fonafen-green mb-4"></i>
+                        <h3 id="stats-enfants" class="text-5xl font-bold text-gray-900">0</h3>
+                        <p class="text-gray-500 mt-2">Enfants Enregistrés</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-md">
+                        <i class="fas fa-venus-mars text-4xl text-fonafen-green mb-4"></i>
+                        <h3 id="stats-garcons-filles" class="text-5xl font-bold text-gray-900">0 / 0</h3>
+                        <p class="text-gray-500 mt-2">Garçons / Filles</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-md">
+                        <i class="fas fa-map-marker-alt text-4xl text-fonafen-green mb-4"></i>
+                        <h3 id="stats-provinces" class="text-5xl font-bold text-gray-900">0</h3>
+                        <p class="text-gray-500 mt-2">Provinces Couvertes</p>
+                    </div>
+                </div>
+                 <div class="mt-12 bg-gray-50 p-8 rounded-xl shadow-md reveal">
+                     <h3 class="text-2xl font-bold text-gray-800 text-center mb-6">Répartition par Province</h3>
+                     <canvas id="provinceChart" height="100"></canvas>
+                 </div>
+            </div>
+        </section>
+
+        <!-- Section du formulaire -->
+        <section id="formulaire-enregistrement" class="section hidden py-12 md:py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Identification de l'enfant</h2>
+                        <p class="mt-2 text-gray-600">Veuillez remplir les informations ci-dessous avec précision.</p>
+                    </div>
+                    <form id="child-registration-form" class="bg-gray-50 p-8 rounded-xl shadow-lg border border-gray-200 space-y-6">
+                        <div class="md:col-span-2 text-center">
+                             <label class="block text-sm font-medium text-gray-700 mb-2">Photo de l'enfant</label>
+                             <img id="photo-preview" src="https://placehold.co/128x128/e2e8f0/cbd5e0?text=Photo" alt="Aperçu" class="h-32 w-32 rounded-full object-cover bg-gray-200 mx-auto mb-4 border-4 border-white shadow-md">
+                             <label for="photo" class="custom-file-upload py-2 px-4 inline-block text-fonafen-green font-semibold rounded-lg hover:text-white hover:bg-fonafen-green">
+                                 <i class="fas fa-upload mr-2"></i><span>Télécharger une photo</span>
+                                 <input id="photo" name="photo" type="file" class="sr-only" accept="image/*">
+                             </label>
+                         </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                            <div><label for="nom" class="block text-sm font-medium text-gray-700">Nom</label><input type="text" id="nom" name="nom" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                            <div><label for="postnom" class="block text-sm font-medium text-gray-700">Postnom</label><input type="text" id="postnom" name="postnom" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                            <div><label for="prenom" class="block text-sm font-medium text-gray-700">Prénom</label><input type="text" id="prenom" name="prenom" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                            <div><label for="sexe" class="block text-sm font-medium text-gray-700">Sexe</label><select id="sexe" name="sexe" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green bg-white"><option value="">Sélectionner...</option><option value="Masculin">Masculin</option><option value="Féminin">Féminin</option></select></div>
+                            <div><label for="lieu_naissance" class="block text-sm font-medium text-gray-700">Lieu de naissance</label><input type="text" id="lieu_naissance" name="lieu_naissance" placeholder="Ex: Kinshasa" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                            <div><label for="date_naissance" class="block text-sm font-medium text-gray-700">Date de naissance</label><input type="date" id="date_naissance" name="date_naissance" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                            <div><label for="province" class="block text-sm font-medium text-gray-700">Province d'origine</label><select id="province" name="province" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green bg-white"><option value="">Sélectionner une province...</option></select></div>
+                            <div><label for="district" class="block text-sm font-medium text-gray-700">District</label><select id="district" name="district" required disabled class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green bg-gray-200 transition duration-300"><option value="">Sélectionner un district...</option></select></div>
+                            <div><label for="territoire" class="block text-sm font-medium text-gray-700" id="territoire-label">Territoire</label><select id="territoire" name="territoire" required disabled class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green bg-gray-200 transition duration-300"><option value="">Sélectionner un territoire...</option></select></div>
+                            <div><label for="secteur" class="block text-sm font-medium text-gray-700" id="secteur-label">Secteur / Chefferie</label><select id="secteur" name="secteur" required disabled class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green bg-gray-200 transition duration-300"><option value="">Sélectionner un secteur...</option></select></div>
+                            <div><label for="pere" class="block text-sm font-medium text-gray-700">Nom du père</label><input type="text" id="pere" name="pere" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                            <div><label for="mere" class="block text-sm font-medium text-gray-700">Nom de la mère</label><input type="text" id="mere" name="mere" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                            <div class="md:col-span-2"><label for="adresse" class="block text-sm font-medium text-gray-700">Adresse domicile</label><input type="text" id="adresse" name="adresse" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                            <div><label for="tel1" class="block text-sm font-medium text-gray-700">Téléphone 1</label><input type="tel" id="tel1" name="tel1" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                            <div><label for="tel2" class="block text-sm font-medium text-gray-700">Téléphone 2 (Optionnel)</label><input type="tel" id="tel2" name="tel2" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></div>
+                            <div class="md:col-span-2"><label for="autres_infos" class="block text-sm font-medium text-gray-700">Autres informations</label><textarea id="autres_infos" name="autres_infos" rows="3" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green"></textarea></div>
+                        </div>
+                        <div class="mt-8 pt-5 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-end gap-4">
+                            <button type="button" class="btn-retour w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg transition duration-300">Retour</button>
+                            <button type="submit" class="w-full sm:w-auto bg-fonafen-green hover:bg-fonafen-green-dark text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105"><i class="fas fa-check mr-2"></i>Soumettre l'enregistrement</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page de consultation -->
+        <section id="page-consultation" class="section hidden py-12 md:py-20 bg-gray-100">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Consulter les Enregistrements</h2>
+                    <p class="mt-2 text-gray-600">Recherchez, filtrez et exportez les données des enfants enregistrés.</p>
+                </div>
+
+                <div class="max-w-6xl mx-auto">
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-8 sticky top-24 z-40 glass-effect">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                            <input type="text" id="recherche-nom" placeholder="Rechercher par nom, postnom..." class="md:col-span-2 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green">
+                            <select id="filtre-province" class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green bg-white"><option value="">Toutes les provinces</option></select>
+                            <select id="filtre-sexe" class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-fonafen-green focus:border-fonafen-green bg-white"><option value="">Tous les sexes</option><option value="Masculin">Masculin</option><option value="Féminin">Féminin</option></select>
+                        </div>
+                         <div class="flex justify-end mt-4">
+                            <button id="btn-export-csv" class="bg-fonafen-gold hover:bg-opacity-80 text-white font-bold py-2 px-4 rounded-lg transition duration-300"><i class="fas fa-file-csv mr-2"></i>Exporter en CSV</button>
+                        </div>
+                    </div>
+                    <div id="resultats-recherche" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    <div id="aucun-resultat" class="hidden text-center py-10">
+                        <i class="fas fa-box-open text-6xl text-gray-400 mb-4"></i>
+                        <p class="text-gray-500 text-lg">Aucun enregistrement ne correspond à vos critères.</p>
+                    </div>
+                </div>
+                 <div class="mt-12 text-center"><button type="button" class="btn-retour bg-fonafen-green hover:bg-fonafen-green-dark text-white font-bold py-3 px-8 rounded-lg transition duration-300">Retour à l'accueil</button></div>
+            </div>
+        </section>
+
+        <!-- Page de détails de l'enfant -->
+        <section id="page-details" class="section hidden py-12 md:py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                 <div id="details-printable-area" class="max-w-4xl mx-auto bg-gray-50 p-8 rounded-xl shadow-lg border border-gray-200">
+                    <div class="flex justify-between items-start mb-8">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-800">Fiche d'Identification</h2>
+                            <p class="text-gray-500">Générée le <span id="generation-date"></span></p>
+                        </div>
+                        <img src="logofonafen.png" alt="Logo FONAFEN" class="h-20 w-auto">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                        <div class="md:col-span-1 flex justify-center">
+                            <img id="details-photo" src="" alt="Photo de l'enfant" class="h-48 w-48 rounded-full object-cover border-8 border-white shadow-xl">
+                        </div>
+                        <div class="md:col-span-2 space-y-4">
+                            <div><h3 class="text-2xl font-bold text-gray-900" id="details-nom"></h3></div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-lg">
+                                <p><strong class="font-medium text-gray-600">Sexe:</strong> <span id="details-sexe"></span></p>
+                                <p><strong class="font-medium text-gray-600">Naissance:</strong> <span id="details-naissance"></span></p>
+                                <p><strong class="font-medium text-gray-600">Province:</strong> <span id="details-province"></span></p>
+                                <p><strong class="font-medium text-gray-600">District:</strong> <span id="details-district"></span></p>
+                                <p><strong class="font-medium text-gray-600">Territoire:</strong> <span id="details-territoire"></span></p>
+                                <p><strong class="font-medium text-gray-600">Secteur:</strong> <span id="details-secteur"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-10 border-t pt-8 space-y-3 text-lg">
+                        <h4 class="text-xl font-bold text-gray-700 mb-4">Informations Familiales et Contact</h4>
+                        <p><strong class="font-medium text-gray-600">Nom du père:</strong> <span id="details-pere"></span></p>
+                        <p><strong class="font-medium text-gray-600">Nom de la mère:</strong> <span id="details-mere"></span></p>
+                        <p><strong class="font-medium text-gray-600">Adresse:</strong> <span id="details-adresse"></span></p>
+                        <p><strong class="font-medium text-gray-600">Téléphones:</strong> <span id="details-telephones"></span></p>
+                        <div>
+                            <strong class="font-medium text-gray-600">Autres informations:</strong>
+                            <p id="details-autres" class="text-gray-800 mt-1 whitespace-pre-wrap p-4 bg-gray-100 rounded-md"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 no-print">
+                    <button type="button" id="btn-details-retour" class="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg transition duration-300">Retour à la liste</button>
+                    <button type="button" id="btn-imprimer" class="w-full sm:w-auto bg-fonafen-green hover:bg-fonafen-green-dark text-white font-bold py-3 px-6 rounded-lg transition duration-300"><i class="fas fa-print mr-2"></i>Imprimer la fiche</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="bg-gray-800 text-white reveal">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+                 <div class="flex flex-col items-center md:items-start">
+                    <img src="logofonafen.png" alt="Logo FONAFEN" class="h-20 w-auto mb-4 bg-white p-2 rounded-full">
+                    <p class="text-gray-400">FONDS NATIONAL POUR LA PROMOTION DE LA FEMME ET LA PROTECTION DE L’ENFANT</p>
+                </div>
+                <div><h3 class="font-bold text-lg mb-4">Adresse</h3><p class="text-gray-400">Boulevard du 30 Juin n°2164, Commune de la Gombe / Kinshasa, RDC</p></div>
+                <div>
+                    <h3 class="font-bold text-lg mb-4">Contact & Suivez-nous</h3>
+                    <p class="text-gray-400"><a href="mailto:contact@fonafen.gouv.cd" class="hover:text-white">contact@fonafen.gouv.cd</a></p>
+                    <p class="text-gray-400 mt-2">+243 81 622 42 21</p>
+                    <div class="mt-4 flex justify-center md:justify-start space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-facebook-f text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-twitter text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-linkedin-in text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-youtube text-2xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-700 pt-6 text-center text-gray-500 text-sm"><p>&copy; <span id="year"></span> FONAFEN. Tous droits réservés.</p></div>
+        </div>
+    </footer>
+
+    <!-- Modale de Notification -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-[100] hidden items-center justify-center p-4">
+        <div id="modal-content" class="bg-white rounded-lg shadow-2xl p-6 sm:p-8 w-full max-w-md transform scale-95 opacity-0">
+            <div class="flex items-center">
+                <div id="modal-icon" class="w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                    <i class="fas text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h3 id="modal-title" class="text-xl font-bold text-gray-800"></h3>
+                    <p id="modal-message" class="text-gray-600 mt-1"></p>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button id="modal-close" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-5 rounded-lg transition duration-300">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- VARIABLES GLOBALES ET INITIALISATION ---
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        let enregistrements = [];
+        let provinceChartInstance = null;
+
+        const ui = {
+            preloader: document.getElementById('preloader'),
+            header: document.getElementById('main-header'),
+            accueil: document.getElementById('accueil'),
+            formulaire: document.getElementById('formulaire-enregistrement'),
+            consultation: document.getElementById('page-consultation'),
+            details: document.getElementById('page-details'),
+            statistiques: document.getElementById('statistiques'),
+
+            // Buttons
+            btnsEnregistrer: [document.getElementById('btn-enregistrer'), document.getElementById('btn-enregistrer-nav')],
+            btnsConsulter: [document.getElementById('btn-consulter'), document.getElementById('btn-consulter-nav')],
+            btnsRetour: document.querySelectorAll('.btn-retour'),
+            btnDetailsRetour: document.getElementById('btn-details-retour'),
+            btnImprimer: document.getElementById('btn-imprimer'),
+            btnExportCSV: document.getElementById('btn-export-csv'),
+            logoLink: document.getElementById('logo-fonafen-link'),
+
+            // Form
+            registrationForm: document.getElementById('child-registration-form'),
+            photoPreview: document.getElementById('photo-preview'),
+            photoInput: document.getElementById('photo'),
+            provinceSelect: document.getElementById('province'),
+            districtSelect: document.getElementById('district'),
+            territoireSelect: document.getElementById('territoire'),
+            secteurSelect: document.getElementById('secteur'),
+            territoireLabel: document.getElementById('territoire-label'),
+            secteurLabel: document.getElementById('secteur-label'),
+
+            // Consultation
+            resultatsDiv: document.getElementById('resultats-recherche'),
+            aucunResultatDiv: document.getElementById('aucun-resultat'),
+            rechercheNomInput: document.getElementById('recherche-nom'),
+            filtreProvinceSelect: document.getElementById('filtre-province'),
+            filtreSexeSelect: document.getElementById('filtre-sexe'),
+
+            // Stats
+            statsEnfants: document.getElementById('stats-enfants'),
+            statsGarconsFilles: document.getElementById('stats-garcons-filles'),
+            statsProvinces: document.getElementById('stats-provinces'),
+
+            // Modal
+            modalBackdrop: document.getElementById('modal-backdrop'),
+            modalContent: document.getElementById('modal-content'),
+            modalIcon: document.getElementById('modal-icon'),
+            modalIconI: document.querySelector('#modal-icon i'),
+            modalTitle: document.getElementById('modal-title'),
+            modalMessage: document.getElementById('modal-message'),
+            modalClose: document.getElementById('modal-close'),
+        };
+
+        const divisions = { "Kongo-Central": { "Bas-Fleuve": { "Kasangulu": ["Kasangulu", "Luila", "Lukunga-Mputu"], "Kimvula": ["Benga", "Lubisi", "Lula-Lumene"], "Lukula": ["Fubu", "Kakongo", "Patu", "Tsanga-Sud", "Tsundi-Sud"], "Luozi": ["Balari", "Kenge", "Kimbanza", "Kimumba", "Kinkenge", "Kivunda", "Mbanza Mona", "Mbanza Mwembe", "Mbanza Ngoyo", "Mongo Luala"], "Madimba": ["Kinkosi (Luidi)", "Mfidi Malele", "Mfuma-Kibambi", "Ngeba", "Ngufu", "Wungu"], "Mbanza-Ngungu": ["Boko", "Gombe-Matadi", "Gombe-Sud", "Kivulu", "Kwilu-Ngongo", "Lunzadi", "Ntimansi"], "Moanda": ["Assolongo", "Boma-Bungu", "la Mer"], "Seke-Banza": ["Bundi", "Isangila", "Lufu", "Mbavu", "Sumbi"], "Songololo": ["Bamboma", "Kimpese", "Luima", "Palabala", "Wombo"], "Tshela": ["Bula-Naku", "Loango", "Lubolo", "Lubuzi", "Maduda", "Nganda-Tsundi", "Nzobe Luzi", "Tshela Banga"] }}, "Kwango": { "Kwango": { "Feshi": ["Feshi Maziamo", "Ganaketi", "Lobo", "Mukoso"], "Kahemba": ["Muloshi", "Mwa-Mushiko", "Mwendjila", "Bangu", "Bindu", "Kulindji"], "Kasongo-Lunda": ["Kasa", "Kasongo-Lunda", "Kibunda", "Kingulu", "Kizamba", "Mawanga", "Panzi", "Swa-Tenda"], "Kenge": ["Pelende-Nord", "Bukanga-Lonzo", "Dinga", "Kolokoso", "Mosamba"], "Popokabaka": ["Lufuma", "Popokabaka", "Yonso"] }}, "Kwilu": { "Kwilu": { "Bagata": ["Kidzweme", "Kwango-Kasai", "Kwilu-Ntober", "Manzasay", "Wamba-Fatundu"], "Bulungu": ["Dwe", "Imbongo", "Kilunda", "Kipuka", "Kwenge", "Kwilu-Kimbata", "Luniungu", "Mikwi", "Niadi-Nkara", "Nko"], "Gungu": ["Gungu", "Kandale", "Kilamba", "Kilembe", "Kisunzu", "Kobo (Mosala)", "Kondo", "Lozo", "Lukamba", "Mudikalunga", "Mungindu", "Ngudi"], "Idiofa": ["Banga", "Belo", "Bulwem", "Kalanganda", "Kanga", "Kapia", "Kipuku", "Madimbi", "Mateko", "Musanga-Idiofa", "Sedzo", "Yasa-Lokwa"], "Masi-Manimba": ["Bindungi", "Kibolo", "Kinzenga", "Kinzenzengo", "Kitoy", "Masi-Manimba", "Mokamo", "Mosango", "Pay-Kongila", "Sungu"] }}, "Mai-Ndombe": { "Mai-Ndombe": { "Bolobo": ["Bateke-Nord"], "Inongo": ["Basengele", "Bolia", "Inongo"], "Kiri": ["Beronge", "Lotoy (Lutoy)", "Pendjwa"], "Kutu": ["Badia", "Batere", "Kemba", "Lwabo (Luabu)", "Mfimi"], "Kwamouth": ["Bateke-Sud/Twa"], "Mushie": ["Baboma-Nord"], "Oshwe": ["E.L.L. (Entre Lukenie-Lokoro) Nkaw", "Kangara", "Lokolama", "Lukenie"], "Yumbi": ["Mongama"] }}, "Équateur": { "Équateur": { "Basankusu": ["Bolomboko", "Duali", "Engoko", "Lobenga", "Lulonga", "Mompono", "Ngiri", "Nkile"], "Bikoro": ["Elanga", "Ekonda", "Ikoko-Bonginda", "Ingende", "Losanganya"], "Bomongo": ["Bomongo", "Dongo", "Libenge"], "Lukolela": ["Lukolela", "Busira"], "Makanza": ["Bokatola", "Lulonga"] }}, "Mongala": { "Mongala": { "Bumba": ["Bampombe", "Bapamba", "Bangando", "Bangengele", "Banunu-Bobangi", "Mongwandi"], "Bongandanga": ["Bokatola", "Bosondjo", "Mondunga"], "Lisala": ["Dongo", "Ngbanda", "Ngombe", "Mongala"] }}, "Nord-Ubangi": { "Nord-Ubangi": { "Bosobolo": ["Banga", "Bobanda", "Mwingi"], "Businga": ["Karawa", "Libopi", "Likati", "Moenge"], "Mobayi-Mbongo": ["Banga", "Gbado", "Ngbanza"], "Yakoma": ["Gbadolite", "Gbanziri", "Gbowo", "Yakoma"] }}, "Sud-Ubangi": { "Sud-Ubangi": { "Gemena": ["Gbado", "Libenge", "Mopoy"], "Kungu": ["Banga", "Libinza", "Dongo", "Ngbanda"], "Libenge": ["Libenge", "Ngiri", "Ubangi"], "Zongo": ["Zongo"] }}, "Tshuapa": { "Tshuapa": { "Befale": ["Befale", "Boangi", "Bokatola", "Duali"], "Boende": ["Boende", "Djonga", "Ikela-Sud", "Bokungu"], "Bokungu": ["Bokungu", "Lofome", "Lomela", "Monkoto"], "Djolu": ["Djolu", "Ikela-Nord", "Lompole"], "Ikela": ["Ikela", "Lokelo", "Tshuapa"], "Monkoto": ["Monkoto", "Bokatola", "Bosanga"] }}, "Haut-Uele": { "Haut-Uele": { "Dungu": ["Dungu", "Uele", "Kibali"], "Faradje": ["Kere", "Logo Ogambi", "Logo Lolia"], "Niangara": ["Kibali", "Kopa", "Madi"], "Rungu": ["Logo", "Ndo"], "Wamba": ["Bafwabaka", "Bafwasende", "Mambasa"], "Watsa": ["Kibali", "Mondo-Missa", "Logo"] }}, "Bas-Uele": { "Bas-Uele": { "Aketi": ["Bima", "Avuru", "Ngindo"], "Ango": ["Bili", "Bomu", "Ngindo"], "Bambesa": ["Bangelema", "Makere"], "Bondo": ["Bima", "Deni", "Gangu", "Ngindo"], "Buta": ["Avuru", "Bambesa", "Monganzulu"], "Poko": ["Bili", "Makere", "Ndo"] }}, "Ituri": { "Ituri": { "Aru": ["Kakwa", "Logo Lolia", "Logo Ogambi", "Zaki"], "Djugu": ["Bahema-Nord", "Bahema-Sud", "Walendu-Bindi", "Walendu-Djatsi", "Walendu-Pitsi"], "Irumu": ["Walese-Vonkutu", "Walese-Dese", "Basili", "Bakwanza", "Banyali"], "Mahagi": ["Alur Djuganda", "Alur Kebo", "Alur Sika", "Alur Nyarambe", "Alur War-Palara"], "Mambasa": ["Bombo", "Bandaka", "Babila-Babombi", "Walese-Karo"] }}, "Tshopo": { "Tshopo": { "Bafwasende": ["Baleka", "Bamanga", "Bakumu", "Bafwambaya"], "Banalia": ["Bangelema", "Baboa-Bokengu", "Bakumu-Balongo"], "Isangi": ["Bakumu-Lokombe", "Bamanga", "Bangelema"], "Opala": ["Baleka", "Topoke", "Lokele"], "Ubundu": ["Bamanga", "Baleka", "Bangelema"], "Yahuma": ["Bakumu", "Lese", "Kumu"] }}, "Kasaï": { "Kasaï": { "Dekese": ["Dekese", "Bena-Dibele"], "Ilebo": ["Banga", "Kwilu-Kimbata", "Basongo"], "Luebo": ["Luebo", "Kasai", "Bakwa Kalonji"] }}, "Kasaï-Central": { "Kasaï-Central": { "Demba": ["Bena-Mwamba", "Bena-Kabongo"], "Dibaya": ["Bena-Ngoshi", "Bena-Mpuka"], "Kazumba": ["Lutshima", "Bena-Mfuilu"], "Luiza": ["Bena-Mbuyi", "Bakwa-Kalonji"], "Dimbelenge": ["Bena-Tshibuyi", "Bena-Mulumba"] }}, "Kasaï-Oriental": { "Kasaï-Oriental": { "Kabeya-Kamwanga": ["Bakwa-Dishi", "Bena-Tshibanda"], "Miabi": ["Bena-Kanyuka", "Bena-Tshilomba"], "Lupatapata": ["Bena-Tshilolo", "Bena-Tshibanda"] }}, "Lomami": { "Lomami": { "Kamiji": ["Bakwa-Mulumba", "Bena-Kanyoka"], "Luilu": ["Bakwa-Kalonji", "Bena-Tshibangu"], "Ngandajika": ["Bakwa-Ndoba", "Bena-Nshimba"] }}, "Sankuru": { "Sankuru": { "Katako-Kombe": ["Katako-Kombe", "Bakwa-Meya"], "Kole": ["Kole", "Tschofa"], "Lodja": ["Lodja", "Ikolombe", "Ototo"], "Lomela": ["Lomela", "Befale"], "Lubefu": ["Lubefu", "Bena-Mpungu"], "Lusambo": ["Lusambo", "Bena-Tshiala"] }}, "Haut-Katanga": { "Haut-Katanga": { "Kasenga": ["Bunkeya", "Kiluba", "Kaponda"], "Kipushi": ["Kaponda", "Lubudi"], "Mitwaba": ["Mulongo", "Mwenge"], "Pweto": ["Kiluba", "Pweto"] }}, "Haut-Lomami": { "Haut-Lomami": { "Bukama": ["Mulongo", "Kabondo-Dianda"], "Kabongo": ["Bena-Kabongo", "Kalunga"], "Kamina": ["Bena-Mwamba", "Katshibu"], "Kaniama": ["Lwena", "Bena-Kalamba"], "Malemba-Nkulu": ["Mulongo", "Mwenge"] }}, "Lualaba": { "Lualaba": { "Dilolo": ["Dilolo", "Lualaba"], "Kapanga": ["Kapanga", "Luiza"], "Mutshatsha": ["Fungurume", "Mitwaba"] }}, "Tanganyika": { "Tanganyika": { "Kabalo": ["Kabalo", "Lukuga"], "Kalemie": ["Kalemie", "Kyombo"], "Kongolo": ["Kongolo", "Ngandja"], "Manono": ["Kibanda", "Kyombo"], "Moba": ["Moba", "Pweto"], "Nyunzu": ["Kabalo", "Nyunzu"] }}, "Maniema": { "Maniema": { "Kabambare": ["Babira-Banda", "Balanga", "Bangubangu"], "Kailo": ["Bangengele", "Batetela", "Lega"], "Kasongo": ["Babira", "Batetela", "Lega"], "Kibombo": ["Bangengele", "Batetela", "Lega"], "Lubutu": ["Bangengele", "Batetela", "Mituku"], "Punia": ["Bakongola", "Batetela", "Lega"], "Pangi": ["Bangubangu", "Batetela", "Lega"] }}, "Nord-Kivu": { "Nord-Kivu": { "Beni": ["Beni-Mbau", "Beni-Mangina", "Ruwenzori"], "Lubero": ["Bapere", "Baswagha", "Batangi", "Bapakombe"], "Masisi": ["Katoyi", "Bashali", "Osso-Banyungu"], "Rutshuru": ["Bwisha", "Bwito", "Rugari"], "Walikale": ["Bakano", "Wanianga"] }}, "Sud-Kivu": { "Sud-Kivu": { "Fizi": ["Mutambala", "Ngandja", "Tanganyika"], "Idjwi": ["Rubenga", "Ntambuka"], "Kabare": ["Kabare", "Nindja"], "Kalehe": ["Buhavu", "Buloho", "Nyalubanja"], "Mwenga": ["Itombwe", "Basile", "Wamuzimu"], "Shabunda": ["Lulenge", "Wakabango I", "Wakabango II"], "Uvira": ["Bafuliiru", "Bavira", "Tanganyika"] }}, "Kinshasa": { "communes": ["Bandalungwa", "Barumbu", "Bumbu", "Binza-Ozone", "Gombe", "Kalamu", "Kasa-Vubu", "Kimbanseke", "Kintambo", "Kisenso", "Lemba", "Limete", "Lingwala", "Makala", "Maluku", "Masina", "Matete", "Mont Ngafula", "N’djili", "Nsele", "Ngaba", "Ngaliema", "Selembao"] } };
+        const demoData = [ { id: 1, nom: "Mbappe", postnom: "Lottin", prenom: "Kylian", province: "Kinshasa", sexe: "Masculin", lieu_naissance: 'Paris', date_naissance: '1998-12-20', photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Kylian_Mbapp%C3%A9_in_2021.jpg/800px-Kylian_Mbapp%C3%A9_in_2021.jpg", district: 'N/A', territoire: 'Gombe', secteur: 'N/A', pere: 'Wilfrid Mbappe', mere: 'Fayza Lamari', adresse: '123 Avenue des Champs-Élysées', tel1: '+33 1 23 45 67 89', tel2: '', autres_infos: 'Footballeur professionnel.' }, { id: 2, nom: "Tshala", postnom: "", prenom: "Muana", province: "Kasaï-Oriental", sexe: "Féminin", lieu_naissance: 'Luluabourg', date_naissance: '1958-05-13', photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=TM", district: 'Kasaï-Oriental', territoire: 'Miabi', secteur: 'Bena-Kanyuka', pere: 'Inconnu', mere: 'Inconnue', adresse: 'Kinshasa, RDC', tel1: '+243 81 00 00 001', tel2: '', autres_infos: 'Artiste musicienne, "Mamu Nationale".' }, { id: 3, nom: "Lokua", postnom: "", prenom: "Kanza", province: "Équateur", sexe: "Masculin", lieu_naissance: 'Bukavu', date_naissance: '1958-04-21', photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=LK", district: 'Équateur', territoire: 'Bikoro', secteur: 'Elanga', pere: 'Inconnu', mere: 'Inconnue', adresse: 'Paris, France', tel1: '+33 1 98 76 54 32', tel2: '', autres_infos: 'Artiste musicien et arrangeur.' }, { id: 4, nom: "Ilunga", postnom: "Mwepu", prenom: "Hervé", province: "Haut-Katanga", sexe: "Masculin", lieu_naissance: 'Lubumbashi', date_naissance: '2015-02-02', photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=HI", district: 'Haut-Katanga', territoire: 'Kipushi', secteur: 'Kaponda', pere: 'Joseph Ilunga', mere: 'Marie Mwepu', adresse: '15 Avenue de la Révolution, Lubumbashi', tel1: '+243 99 11 22 333', tel2: '', autres_infos: 'Élève en première année primaire.' }, { id: 5, nom: "Bongi", postnom: "Amani", prenom: "Aisha", province: "Nord-Kivu", sexe: "Féminin", lieu_naissance: 'Goma', date_naissance: '2018-08-11', photo: "https://placehold.co/200x200/e2e8f0/cbd5e0?text=AB", district: 'Nord-Kivu', territoire: 'Beni', secteur: 'Ruwenzori', pere: 'David Bongi', mere: 'Rebecca Amani', adresse: 'Quartier Les Volcans, Goma', tel1: '+243 82 44 55 666', tel2: '', autres_infos: '' } ];
+
+        // --- FONCTIONS UTILITAIRES ---
+        const saveToLocalStorage = () => localStorage.setItem('enregistrements_fonafen', JSON.stringify(enregistrements));
+        const loadFromLocalStorage = () => {
+            const data = localStorage.getItem('enregistrements_fonafen');
+            if (data) {
+                enregistrements = JSON.parse(data);
+            } else {
+                enregistrements = demoData;
+                saveToLocalStorage();
+            }
+        };
+
+        const showModal = (type, title, message) => {
+            const icons = { success: 'fa-check', error: 'fa-times' };
+            const colors = { success: 'bg-green-500', error: 'bg-red-500' };
+            ui.modalIcon.className = `w-12 h-12 rounded-full flex items-center justify-center mr-4 ${colors[type]}`;
+            ui.modalIconI.className = `fas ${icons[type]} text-2xl text-white`;
+            ui.modalTitle.textContent = title;
+            ui.modalMessage.textContent = message;
+            ui.modalBackdrop.classList.remove('hidden');
+            ui.modalBackdrop.classList.add('flex');
+            setTimeout(() => {
+                ui.modalBackdrop.classList.remove('opacity-0');
+                ui.modalContent.classList.remove('scale-95', 'opacity-0');
+                ui.modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        };
+
+        const closeModal = () => {
+            ui.modalContent.classList.add('scale-95', 'opacity-0');
+            ui.modalContent.classList.remove('scale-100', 'opacity-100');
+            setTimeout(() => {
+                ui.modalBackdrop.classList.add('hidden');
+                ui.modalBackdrop.classList.remove('flex');
+            }, 300);
+        };
+        ui.modalClose.addEventListener('click', closeModal);
+        ui.modalBackdrop.addEventListener('click', (e) => { if(e.target === ui.modalBackdrop) closeModal() });
+
+        const showSection = (sectionToShow) => {
+            window.scrollTo(0, 0);
+            sections.forEach(sec => sec.classList.add('hidden'));
+
+            if (sectionToShow === ui.accueil) {
+                ui.accueil.classList.remove('hidden');
+                ui.statistiques.classList.remove('hidden');
+                updateStats();
+            } else {
+                sectionToShow.classList.remove('hidden');
+            }
+
+            if(sectionToShow === ui.consultation) filtrerEtAfficher();
+        };
+
+        const animateCount = (element, target) => {
+            let start = 0;
+            const duration = 1500;
+            const stepTime = Math.abs(Math.floor(duration / target));
+            const timer = setInterval(() => {
+                start += 1;
+                if(element.id === 'stats-provinces') element.textContent = start;
+                else element.textContent = start;
+                if (start === target) clearInterval(timer);
+            }, stepTime);
+        };
+
+        const updateStats = () => {
+            const total = enregistrements.length;
+            const garcons = enregistrements.filter(e => e.sexe === 'Masculin').length;
+            const filles = total - garcons;
+            const provinces = new Set(enregistrements.map(e => e.province)).size;
+
+            ui.statsEnfants.textContent = total;
+            ui.statsGarconsFilles.textContent = `${garcons} / ${filles}`;
+            ui.statsProvinces.textContent = provinces;
+
+            updateProvinceChart();
+        };
+
+        const updateProvinceChart = () => {
+            const provinceCounts = enregistrements.reduce((acc, enfant) => {
+                acc[enfant.province] = (acc[enfant.province] || 0) + 1;
+                return acc;
+            }, {});
+
+            const sortedProvinces = Object.entries(provinceCounts).sort(([,a],[,b]) => b-a);
+            const labels = sortedProvinces.map(([province]) => province);
+            const data = sortedProvinces.map(([,count]) => count);
+
+            const ctx = document.getElementById('provinceChart').getContext('2d');
+            if (provinceChartInstance) {
+                provinceChartInstance.destroy();
+            }
+            provinceChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets: [{ label: "Nombre d'enfants", data, backgroundColor: 'rgba(0, 130, 64, 0.7)', borderColor: 'rgba(0, 130, 64, 1)', borderWidth: 1 }] },
+                options: { scales: { y: { beginAtZero: true } }, responsive: true, maintainAspectRatio: true }
+            });
+        };
+
+        // --- NAVIGATION ET AFFICHAGE DES SECTIONS ---
+        ui.logoLink.addEventListener('click', () => showSection(ui.accueil));
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    if (targetId === '#accueil' || targetId === '#statistiques') {
+                        showSection(ui.accueil);
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+        ui.btnsEnregistrer.forEach(btn => btn.addEventListener('click', () => showSection(ui.formulaire)));
+        ui.btnsConsulter.forEach(btn => btn.addEventListener('click', () => showSection(ui.consultation)));
+        ui.btnsRetour.forEach(btn => btn.addEventListener('click', () => showSection(ui.accueil)));
+        ui.btnDetailsRetour.addEventListener('click', () => showSection(ui.consultation));
+        ui.btnImprimer.addEventListener('click', () => window.print());
+
+        // --- LOGIQUE DU FORMULAIRE ---
+        ui.photoInput.addEventListener('change', () => {
+            const file = ui.photoInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => { ui.photoPreview.src = e.target.result; };
+                reader.readAsDataURL(file);
+            }
+        });
+        ui.registrationForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(ui.registrationForm);
+            const data = Object.fromEntries(formData.entries());
+
+            const newId = enregistrements.length > 0 ? Math.max(...enregistrements.map(e => e.id)) + 1 : 1;
+            const newEntry = { id: newId, ...data, photo: ui.photoPreview.src };
+            enregistrements.push(newEntry);
+            saveToLocalStorage();
+
+            showModal('success', 'Succès!', 'Enregistrement soumis avec succès !');
+
+            ui.registrationForm.reset();
+            ui.photoPreview.src = 'https://placehold.co/128x128/e2e8f0/cbd5e0?text=Photo';
+            resetSelect(ui.districtSelect, 'Sélectionner un district...');
+            resetSelect(ui.territoireSelect, 'Sélectionner un territoire...');
+            resetSelect(ui.secteurSelect, 'Sélectionner un secteur...');
+            showSection(ui.accueil);
+        });
+
+        // --- SLIDER HERO ---
+        const heroSlides = [ "https://images.unsplash.com/photo-1519642918688-7e43b19245d8?q=80&w=2070&auto=format&fit=crop", "https://images.unsplash.com/photo-1509099836639-18ba1795216d?q=80&w=1931&auto=format&fit=crop", "https://images.unsplash.com/photo-1542810614-9FCf95e9792e?q=80&w=2070&auto=format&fit=crop" ];
+        let currentSlide = 0;
+        function changeHeroBackground() {
+            ui.accueil.style.backgroundImage = `linear-gradient(rgba(0, 130, 64, 0.8), rgba(0, 0, 0, 0.7)), url('${heroSlides[currentSlide]}')`;
+            currentSlide = (currentSlide + 1) % heroSlides.length;
+        }
+        changeHeroBackground();
+        setInterval(changeHeroBackground, 5000);
+
+        // --- LOGIQUE DE CONSULTATION ET FILTRAGE ---
+        function afficherEnregistrements(data) {
+            ui.resultatsDiv.innerHTML = '';
+            ui.aucunResultatDiv.classList.toggle('hidden', data.length > 0);
+
+            data.forEach(enfant => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-lg shadow-md hover:shadow-xl cursor-pointer transition-all duration-300 transform hover:-translate-y-1 overflow-hidden";
+                card.dataset.id = enfant.id;
+                card.innerHTML = `
+                    <div class="flex items-center p-4">
+                        <img src="${enfant.photo}" alt="Photo de ${enfant.prenom}" class="h-16 w-16 rounded-full object-cover mr-4 border-2 border-gray-200">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-gray-800 text-lg">${enfant.prenom} ${enfant.nom}</h4>
+                            <p class="text-sm text-gray-500">${enfant.province}</p>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                `;
+                ui.resultatsDiv.appendChild(card);
+            });
+        }
+
+        function afficherDetails(enfantId) {
+            const enfant = enregistrements.find(e => e.id === enfantId);
+            if (!enfant) return;
+
+            document.getElementById('generation-date').textContent = new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('details-photo').src = enfant.photo;
+            document.getElementById('details-nom').textContent = `${enfant.prenom} ${enfant.nom} ${enfant.postnom || ''}`;
+            document.getElementById('details-sexe').textContent = enfant.sexe;
+            document.getElementById('details-naissance').textContent = `${enfant.lieu_naissance}, le ${new Date(enfant.date_naissance).toLocaleDateString('fr-FR')}`;
+            document.getElementById('details-province').textContent = enfant.province;
+            document.getElementById('details-district').textContent = enfant.district;
+            document.getElementById('details-territoire').textContent = enfant.territoire;
+            document.getElementById('details-secteur').textContent = enfant.secteur;
+            document.getElementById('details-pere').textContent = enfant.pere;
+            document.getElementById('details-mere').textContent = enfant.mere;
+            document.getElementById('details-adresse').textContent = enfant.adresse;
+            document.getElementById('details-telephones').textContent = [enfant.tel1, enfant.tel2].filter(Boolean).join(' / ');
+            document.getElementById('details-autres').textContent = enfant.autres_infos || 'Aucune information supplémentaire.';
+            showSection(ui.details);
+        }
+
+        ui.resultatsDiv.addEventListener('click', (e) => {
+            const item = e.target.closest('[data-id]');
+            if (item) afficherDetails(parseInt(item.dataset.id, 10));
+        });
+
+        function filtrerEtAfficher() {
+            const termeRecherche = ui.rechercheNomInput.value.toLowerCase();
+            const provinceFiltre = ui.filtreProvinceSelect.value;
+            const sexeFiltre = ui.filtreSexeSelect.value;
+
+            const resultatsFiltres = enregistrements.filter(enfant => {
+                const nomComplet = `${enfant.prenom} ${enfant.nom} ${enfant.postnom || ''}`.toLowerCase();
+                const matchNom = nomComplet.includes(termeRecherche);
+                const matchProvince = !provinceFiltre || enfant.province === provinceFiltre;
+                const matchSexe = !sexeFiltre || enfant.sexe === sexeFiltre;
+                return matchNom && matchProvince && matchSexe;
+            });
+            afficherEnregistrements(resultatsFiltres);
+        }
+
+        ui.rechercheNomInput.addEventListener('input', filtrerEtAfficher);
+        ui.filtreProvinceSelect.addEventListener('change', filtrerEtAfficher);
+        ui.filtreSexeSelect.addEventListener('change', filtrerEtAfficher);
+
+        // --- EXPORT CSV ---
+        ui.btnExportCSV.addEventListener('click', () => {
+            const headers = Object.keys(enregistrements[0]).join(',');
+            const rows = enregistrements.map(row => Object.values(row).map(value => `"${String(value).replace(/"/g, '""')}"`).join(','));
+            const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].join('\n');
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "export_fonafen.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showModal('success', 'Exportation réussie', 'Le fichier CSV a été téléchargé.');
+        });
+
+        // --- ANIMATIONS AU DÉFILEMENT ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- GESTION DU HEADER AU SCROLL ---
+        window.onscroll = () => {
+            if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                ui.header.classList.add('shadow-lg');
+            } else {
+                ui.header.classList.remove('shadow-lg');
+            }
+        };
+
+        // --- LOGIQUE LISTES DÉROULANTES DYNAMIQUES ---
+        Object.keys(divisions).sort().forEach(province => {
+            ui.provinceSelect.add(new Option(province, province));
+            ui.filtreProvinceSelect.add(new Option(province, province));
+        });
+        const resetSelect = (select, placeholder) => { select.innerHTML = `<option value="">${placeholder}</option>`; select.disabled = true; select.classList.add('bg-gray-200'); };
+
+        ui.provinceSelect.addEventListener('change', () => {
+            const selectedProvince = ui.provinceSelect.value;
+            resetSelect(ui.districtSelect, 'Sélectionner un district...');
+            resetSelect(ui.territoireSelect, 'Sélectionner un territoire...');
+            resetSelect(ui.secteurSelect, 'Sélectionner un secteur...');
+
+            ui.territoireLabel.textContent = "Territoire";
+            ui.secteurLabel.style.display = 'block';
+            ui.secteurSelect.style.display = 'block';
+
+            if (!selectedProvince) return;
+
+            if (selectedProvince === "Kinshasa") {
+                ui.districtSelect.innerHTML = `<option value="N/A">N/A</option>`;
+                ui.districtSelect.disabled = true;
+                ui.territoireLabel.textContent = "Commune";
+                ui.secteurLabel.style.display = 'none';
+                ui.secteurSelect.style.display = 'none';
+                ui.secteurSelect.required = false;
+
+                ui.territoireSelect.disabled = false;
+                ui.territoireSelect.classList.remove('bg-gray-200');
+                divisions[selectedProvince].communes.forEach(commune => {
+                    ui.territoireSelect.add(new Option(commune, commune));
+                });
+            } else {
+                ui.secteurSelect.required = true;
+                ui.districtSelect.disabled = false;
+                ui.districtSelect.classList.remove('bg-gray-200');
+                Object.keys(divisions[selectedProvince]).forEach(district => {
+                    ui.districtSelect.add(new Option(district, district));
+                });
+            }
+        });
+
+        ui.districtSelect.addEventListener('change', () => {
+            const selectedProvince = ui.provinceSelect.value;
+            const selectedDistrict = ui.districtSelect.value;
+            resetSelect(ui.territoireSelect, 'Sélectionner un territoire...');
+            resetSelect(ui.secteurSelect, 'Sélectionner un secteur...');
+
+            if (selectedProvince && selectedDistrict && selectedProvince !== "Kinshasa") {
+                ui.territoireSelect.disabled = false;
+                ui.territoireSelect.classList.remove('bg-gray-200');
+                Object.keys(divisions[selectedProvince][selectedDistrict]).forEach(territoire => {
+                    ui.territoireSelect.add(new Option(territoire, territoire));
+                });
+            }
+        });
+
+        ui.territoireSelect.addEventListener('change', () => {
+            const selectedProvince = ui.provinceSelect.value;
+            const selectedDistrict = ui.districtSelect.value;
+            const selectedTerritoire = ui.territoireSelect.value;
+            resetSelect(ui.secteurSelect, 'Sélectionner un secteur...');
+
+            if (selectedProvince && selectedDistrict && selectedTerritoire && selectedProvince !== "Kinshasa") {
+                ui.secteurSelect.disabled = false;
+                ui.secteurSelect.classList.remove('bg-gray-200');
+                divisions[selectedProvince][selectedDistrict][selectedTerritoire].forEach(secteur => {
+                    ui.secteurSelect.add(new Option(secteur, secteur));
+                });
+            }
+        });
+
+        // --- CHARGEMENT FINAL ---
+        window.addEventListener('load', () => {
+            ui.preloader.style.opacity = '0';
+            setTimeout(() => { ui.preloader.style.display = 'none'; }, 500);
+            loadFromLocalStorage();
+            updateStats();
+            filtrerEtAfficher();
+        });
+        document.getElementById('year').textContent = new Date().getFullYear();
+    });
+    </script>
+</body>
+</html>
+
